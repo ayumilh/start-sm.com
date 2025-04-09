@@ -1,0 +1,14 @@
+# Ignorar dependências do Composer
+/vendor/
+
+# Ignorar arquivos de configuração do Composer
+composer.json
+composer.lock
+
+# Ignorar pastas ou arquivos que não devem ser enviados
+DO_NOT_UPLOAD_HERE/
+
+# Outros arquivos temporários
+*.log
+*.tmp
+.env

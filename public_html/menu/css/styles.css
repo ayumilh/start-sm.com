@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+header {
+  background-color: #f8f9fa;
+  /* border-bottom: 5px solid #0056b3; */
+  padding: 20px;
+}
+
+header img {
+  max-width: 250px;
+  height: auto;
+}
+
+.container {
+  padding: 20px;
+}
+
+.saldo {
+  font-size: 18px;
+  color: #333;
+}
+
+.menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.menu-item {
+  background-color: #ffffff;
+  cursor: pointer;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item:hover {
+  transform: scale(1.05);
+  background-color: #e6f4ea;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item i {
+  font-size: 40px;
+  margin-bottom: 10px;
+  color: #0056b3;
+}
+
+.menu-item span {
+  display: block;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #333;
+}
+
+.menu-item a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Estilo para itens trancados */
+.menu-item.locked {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+#smsModal,
+#saldoModal,
+#transactionModal {
+  display: none;
+}

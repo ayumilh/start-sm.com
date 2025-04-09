@@ -1,0 +1,261 @@
+/* modals.css */
+
+/* Estilo do Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 36rem;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+/* Estilo do cabeçalho do modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo do ícone de fechar */
+.modal-header .fa-times {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Estilo do Modal para Enviar SMS */
+#smsModal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 36rem;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+#smsModal input,
+#smsModal textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#smsModal .group-buttons-saldoModal {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    align-items: center;
+}
+
+#smsModal button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#smsModal button:hover {
+    background-color: #004085;
+}
+
+
+
+/* Modal para Adicionar Saldo */
+#saldoModal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 36rem;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+#saldoModal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#saldoModal .modal-header .fa-times {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Texto do modal */
+.modal-content p {
+    text-align: left;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Estilo do input */
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    /* Tamanho do texto no input */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.modal #transaction-taxa {
+    font-size: 14px;
+    color: #555555;
+    margin-top: 5px;
+}
+
+
+#hr-saldoModal {
+    margin: 10px 0;
+    border-color: #ddd;
+}
+
+.group-buttons-saldoModal {
+    display: flex;
+    justify-self: flex-end;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Estilo dos botões no modal */
+.modal button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #004085;
+}
+
+/* Estilo do botão "Confirmar Compra" dentro do modal */
+button.confirmaCompra {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+button.confirmaCompra:hover {
+    background-color: #218838;
+    /* Cor verde escuro ao passar o mouse */
+}
+
+
+#transactionModal button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilo para o texto dentro do modal */
+#transactionModal p {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+#transactionModal p strong {
+    font-weight: bold;
+}
+
+#transactionModal ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#transactionModal ul li {
+    margin: 5px 0;
+}
+
+/* Estilo dos botões dentro do modal */
+#transactionModal button {
+    padding: 10px 20px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100%;
+}
+
+#transactionModal button:hover {
+    background-color: #004085;
+}
+
+
+/* Estilo do Modal de Transação */
+#transactionModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#transactionModal .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Estilo do cabeçalho do modal */
+#transactionModal h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}

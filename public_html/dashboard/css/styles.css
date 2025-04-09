@@ -1,0 +1,16 @@
+.saldo-box {
+    border-radius: 15px;
+    font-size: 1.5rem;
+}
+
+#userDropdown:hover .dropdown-menu {
+    display: block;
+}
+
+textarea {
+    resize: none;
+}
+
+.progress-bar {
+    transition: width 0.5s ease;
+}

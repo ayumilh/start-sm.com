@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registro</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+
+<style>
+    /* Estilo padrão para desktop */
+    body {
+        background-image: url('../images/background-toei-login.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+    }
+
+    .card {
+        max-width: 400px;
+        margin-right: 50px;
+    }
+
+    /* Quando a largura da tela for 768px ou menor (mobile e tablet) */
+    @media (max-width: 768px) {
+        body {
+            background: linear-gradient(to left, #2781e0, #6793c2);
+            /* Gradiente suave de azul */
+            background-size: cover;
+            /* Garantir que o gradiente cubra todo o fundo */
+            background-position: center;
+            /* Centralizar o fundo */
+        }
+
+        .card {
+            margin-right: 0;
+            margin-left: 0;
+        }
+    }
+
+    /* Para quando estiver no desktop */
+    @media (min-width: 769px) {
+        .card {
+            margin-left: auto;
+            /* Empurra o card para a direita */
+        }
+    }
+</style>
+
+<body
+    class="d-flex flex-column justify-content-center lg:justify-content-end align-items-center lg:align-items-end vh-100">
+    <div class="container d-flex flex-column justify-content-center align-items-center lg:align-items-end vh-100">
+        <!-- Formulário de Login/Registro -->
+        <div class="card p-4 rounded-xl shadow-xl" id="auth-container" style="max-width: 400px;">
+            <!-- Formulário de Login -->
+            <div id="login-form">
+                <header class="w-full flex items-center py-4 bg-transparent">
+                    <div class="container mx-auto text-right">
+                        <img src="https://i.ibb.co/p0cKr26/Captura-de-Tela-2024-12-13-a-s-08-54-39-removebg-preview.png"
+                            alt="Logo" class="img-fluid mx-auto d-block" style="max-width: 150px;">
+                    </div>
+                </header>
+                <form action="login.php" method="post">
+                    <div class="form-group">
+                        <label for="emailLogin"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" class="form-control" id="emailLogin" name="email"
+                            placeholder="Digite seu email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="senhaLogin"><i class="fas fa-lock"></i> Senha</label>
+                        <input type="password" class="form-control" id="senhaLogin" name="senha"
+                            placeholder="Digite sua senha" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Não tem uma conta? <a href="#" id="registro-link">Registre-se</a></p>
+                </div>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div id="registro-form" style="display: none;">
+                <header class="w-full flex items-center py-4 bg-transparent">
+                    <div class="container mx-auto text-right">
+                        <img src="https://i.ibb.co/p0cKr26/Captura-de-Tela-2024-12-13-a-s-08-54-39-removebg-preview.png"
+                            alt="Logo" class="img-fluid mx-auto d-block" style="max-width: 150px;">
+                    </div>
+                </header>
+                <form action="registro.php" method="post">
+                    <!-- Campo de Nome -->
+                    <div class="form-group">
+                        <label for="nome"><i class="fas fa-user"></i> Nome</label>
+                        <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite seu nome"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailRegistro"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" class="form-control" id="emailRegistro" name="email"
+                            placeholder="Digite seu email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="senhaRegistro"><i class="fas fa-lock"></i> Senha</label>
+                        <input type="password" class="form-control" id="senhaRegistro" name="senha"
+                            placeholder="Digite sua senha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="keyRegistro"><i class="fas fa-key"></i> Telefone</label>
+                        <input type="text" class="form-control" id="keyRegistro" name="telefone"
+                            placeholder="(XX) - xxxx-xxxx" required>
+                    </div>
+                    <!-- Formulário de Documento -->
+                    <div class="form-group">
+                        <!-- Título do campo "CPF ou CNPJ" -->
+                        <label for="documento_tipo"><i class="fas fa-id-card"></i> CPF ou CNPJ</label>
+
+                        <div class="d-flex">
+                            <!-- Tipo de Documento -->
+                            <div style="flex: 1;">
+                                <select class="form-control" id="documento_tipo" name="documento_tipo" required>
+                                    <option value="CPF">CPF</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+
+                            <!-- Campo de Documento (CPF ou CNPJ) -->
+                            <div class="ml-3" style="flex: 2;">
+                                <input type="text" maxlength="14" class="form-control" id="documento" name="documento"
+                                    placeholder="Digite seu CPF ou CNPJ" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Observação CPF -->
+                    <p class="text-gray-500 mt-2 font-semibold mx-auto text-sm"><span class="text-green-600">OBS:</span> O CPF informado
+                        deve ser o mesmo do titular do banco que irá acrescentar o saldo.</p>
+                    
+                        <button type="submit" class="btn btn-success btn-block">Registrar</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p>Já tem uma conta? <a href="#" id="login-link">Entre</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/scripts.js"></script>
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>
