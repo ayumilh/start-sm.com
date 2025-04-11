@@ -179,8 +179,8 @@ if (isset($_GET['logout'])) {
           <div class="saldo flex items-center">
             <i class="fas fa-wallet mr-2 text-lg text-blue-700"></i> <!-- Ícone de Carteira -->
             <p class="text-sm text-gray-800">
-              Saldo disponível: <strong class="ml-1">
-                <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?> REAIS
+              Saldo disponível: <strong class="ml-1 saldoText">
+              R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?>
               </strong>
             </p>
           </div>
@@ -293,8 +293,8 @@ if (isset($_GET['logout'])) {
           <div class="saldo flex items-end mt-2 xl:w-full">
             <i class="fas fa-wallet mr-2 text-xl text-blue-700"></i> <!-- Ícone de Carteira -->
             <p>
-              Saldo disponível: <strong class="ml-1">
-                <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?> REAIS
+              Saldo disponível: <strong class="ml-1 saldoText">
+                R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?>
               </strong>
             </p>
           </div>
@@ -556,7 +556,7 @@ if (isset($_GET['logout'])) {
       </div>
 
       <!-- Modal do Gerador de Número -->
-      <div id="geradorContent" class="modal mt-40 md:mt-46 lg:mt-0  content-section p-6 lg:max-w-2xl xl:max-w-3xl w-full mx-auto">
+      <div id="geradorContent" class="modal mt-40 md:mt-46 lg:mt-0  w-full content-section p-6 lg:max-w-2xl xl:max-w-3xl w-full mx-auto">
         <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-xl font-bold text-gray-800">Gerador de Número por Estado</h2>
@@ -595,12 +595,64 @@ if (isset($_GET['logout'])) {
               <option value="TO">Tocantins</option>
             </select>
 
-            <label for="quantidade" class="text-gray-700 font-semibold">Quantidade de Números:</label>
-            <input id="quantidade" type="number" min="1" max="1000" value="5" class="p-3 border border-gray-300 rounded" />
+            <!-- Nova Seção: Seleção de Pacotes -->
+            <div class="mb-6">
+              <h3 class="text-lg font-bold text-gray-800 mb-2">Escolha um pacote:</h3>
+              <div id="listaPacotes" class="flex justify-center flex-wrap gap-4">
+                <!-- Pacote 1: 100 números por R$ 5 -->
+                <div class="pacote border border-gray-300 rounded-lg p-4 flex-1 md:flex-2 cursor-pointer hover:shadow-lg transition"
+                  data-quantidade="100" data-preco="5" data-pacote="1">
+                  <h4 class="font-bold">Pacote 1</h4>
+                  <p class="text-gray-700">100 números</p>
+                  <p class="text-gray-700">R$ 5,00</p>
+                </div>
 
-            <button onclick="gerarListaNumeros()"
-              class="text-white px-4 py-2 rounded bg-blue-600 hover:bg-blue-700">
-              Gerar Número
+                <!-- Pacote 2: 1.000 números por R$ 50 -->
+                <div class="pacote border border-gray-300 rounded-lg p-4 flex-1 md:flex-2 cursor-pointer hover:shadow-lg transition"
+                  data-quantidade="1000" data-preco="50" data-pacote="2">
+                  <h4 class="font-bold">Pacote 2</h4>
+                  <p class="text-gray-700">1.000 números</p>
+                  <p class="text-gray-700">R$ 50,00</p>
+                </div>
+
+                <!-- Pacote 3: 10.000 números por R$ 500 -->
+                <div class="pacote border border-gray-300 rounded-lg p-4 flex-1 md:flex-2 cursor-pointer hover:shadow-lg transition"
+                  data-quantidade="10000" data-preco="500" data-pacote="3">
+                  <h4 class="font-bold">Pacote 3</h4>
+                  <p class="text-gray-700">10.000 números</p>
+                  <p class="text-gray-700">R$ 500,00</p>
+                </div>
+
+                <!-- Pacote 4: 100.000 números por R$ 5.000 -->
+                <div class="pacote border border-gray-300 rounded-lg p-4 flex-1 md:flex-2 cursor-pointer hover:shadow-lg transition"
+                  data-quantidade="100000" data-preco="5000" data-pacote="4">
+                  <h4 class="font-bold">Pacote 4</h4>
+                  <p class="text-gray-700">100.000 números</p>
+                  <p class="text-gray-700">R$ 5.000,00</p>
+                </div>
+
+                <!-- Pacote 5: 1.000.000 números por R$ 50.000 -->
+                <div class="pacote border border-gray-300 rounded-lg p-4 flex-1 md:flex-2 cursor-pointer hover:shadow-lg transition"
+                  data-quantidade="1000000" data-preco="50000" data-pacote="5">
+                  <h4 class="font-bold">Pacote 5</h4>
+                  <p class="text-gray-700">1.000.000 números</p>
+                  <p class="text-gray-700">R$ 50.000,00</p>
+                </div>
+              </div>
+
+              <!-- Botão para confirmar seleção do pacote -->
+              <div class="mt-6 text-center">
+                <button id="btnConfirmarPacote" class="text-white px-4 py-2 rounded bg-blue-600 hover:bg-blue-700">
+                  Confirmar Pacote
+                </button>
+              </div>
+            </div>
+            <button id="btnGerarNumeros" onclick="gerarListaNumeros()"
+              class="hidden text-white px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 relative">
+              <span id="loadingSpinner" class="hidden absolute left-1/2 transform -translate-x-1/2 text-white animate-spin">
+                <i class="fas fa-spinner fa-spin"></i> <!-- Ícone de spinner -->
+              </span>
+              <span id="btnText">Gerar Número</span>
             </button>
 
             <!-- Botão de download -->
@@ -686,6 +738,8 @@ if (isset($_GET['logout'])) {
       $('#saldoModal').modal('show');
     }
 
+    let pacoteSelecionado = null;
+
     const dddsPorEstado = {
       "SP": [11, 12, 13, 14, 15, 16, 17, 18, 19],
       "RJ": [21, 22, 24],
@@ -716,6 +770,96 @@ if (isset($_GET['logout'])) {
       "MA": [98, 99]
     };
 
+    let quantidadeSelecionada = 0;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const pacotes = document.querySelectorAll('.pacote');
+
+      // Selecionar pacote
+      pacotes.forEach(pacote => {
+        pacote.addEventListener('click', () => {
+          // Remove a seleção dos outros pacotes
+          pacotes.forEach(p => p.classList.remove('bg-blue-100', 'border-blue-600'));
+
+          // Adiciona classe de seleção ao clicado
+          pacote.classList.add('bg-blue-100', 'border-blue-600');
+          pacoteSelecionado = pacote;
+
+          // Atribui a quantidade ao clicar no pacote
+          quantidadeSelecionada = parseInt(pacote.dataset.quantidade);
+        });
+      });
+
+      // Confirmar pacote
+      const btnConfirmar = document.getElementById('btnConfirmarPacote');
+      const btnGerar = document.getElementById('btnGerarNumeros');
+
+      btnConfirmar.addEventListener('click', () => {
+        if (pacoteSelecionado) {
+          const preco = parseFloat(pacoteSelecionado.dataset.preco);
+          const pacoteId = parseInt(pacoteSelecionado.dataset.pacote);
+
+          fetch('confirmar_pacote.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: `preco=${preco}&pacote_id=${pacoteId}`
+            })
+            .then(res => res.json())
+            .then(data => {
+              if (data.status === 'success') {
+                btnGerar.classList.remove('hidden');
+                alert(
+                  data.mensagem +
+                  "\nValor descontado: R$ " + preco.toFixed(2).replace('.', ',') +
+                  "\nNovo saldo: R$ " + data.novoSaldo
+                );
+
+                // Atualiza o saldo na interface chamando o getSaldo.php novamente
+                fetch('getSaldo.php')
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.error) {
+                      console.error("Erro ao buscar saldo:", data.error);
+                    } else {
+                      const saldoElements = document.querySelectorAll(".saldoText");
+
+                      // Verifica se o valor de saldo é um número
+                      const saldo = parseFloat(data.saldo);
+
+                      if (!isNaN(saldo)) {
+                        // Formata o saldo com separadores de milhar e vírgula para os decimais
+                        const formattedSaldo = saldo.toLocaleString('pt-BR', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        });
+
+                        // Atualiza o saldo para cada elemento com a classe 'saldoText'
+                        saldoElements.forEach(element => {
+                          // Atualiza o conteúdo do elemento com o saldo formatado
+                          element.innerText = `R$ ${formattedSaldo}`;
+                        });
+                      } else {
+                        console.error("Erro: saldo retornado não é um número válido.");
+                      }
+                    }
+                  })
+                  .catch(error => {
+                    console.error("Erro ao obter o saldo:", error);
+                  });
+
+              } else {
+                alert(data.mensagem);
+              }
+            });
+
+        } else {
+          alert('Por favor, selecione um pacote primeiro.');
+        }
+      });
+    });
+
     function gerarNumeroAleatorio(estado = null) {
       const estados = Object.keys(dddsPorEstado);
       const estadoEscolhido = estado && dddsPorEstado[estado] ? estado : estados[Math.floor(Math.random() * estados.length)];
@@ -726,27 +870,48 @@ if (isset($_GET['logout'])) {
 
     let listaNumerosGerados = [];
 
-
     function gerarListaNumeros() {
       const estado = document.getElementById("estadoSelect").value;
-      const quantidade = parseInt(document.getElementById("quantidade").value) || 1;
+      const quantidade = quantidadeSelecionada;
       const listaContainer = document.getElementById("listaNumeros");
       const btnDownload = document.getElementById("btnDownloadTxt");
+
+      const btn = document.getElementById("btnGerarNumeros");
+      const spinner = document.getElementById("loadingSpinner");
+      const btnText = document.getElementById("btnText");
+
+      // Exibe o spinner (ícone de loading) e desativa o botão
+      spinner.classList.remove("hidden");
+      btn.disabled = true;
+      btnText.innerText = "Gerando...";
 
       listaContainer.innerHTML = "";
       listaNumerosGerados = [];
 
-      for (let i = 0; i < quantidade; i++) {
-        const numero = gerarNumeroAleatorio(estado);
-        listaNumerosGerados.push(numero);
+      const numerosUnicos = new Set();
 
-        const item = document.createElement("div");
-        item.textContent = numero;
-        listaContainer.appendChild(item);
+      // Gera números até atingir a quantidade desejada
+      while (numerosUnicos.size < quantidade) {
+        const numero = gerarNumeroAleatorio(estado);
+        if (!numerosUnicos.has(numero)) {
+          numerosUnicos.add(numero);
+
+          const item = document.createElement("div");
+          item.textContent = numero;
+          listaContainer.appendChild(item);
+        }
       }
 
+      listaNumerosGerados = Array.from(numerosUnicos);
+
+      spinner.classList.add("hidden");
+      btn.disabled = false;
+
       // Mostra o botão de download se tiver pelo menos 1 número
+      btnText.innerText = "Gerar Número";
       btnDownload.classList.remove("hidden");
+
+      btn.classList.add("hidden");
     }
 
     function baixarListaTxt() {
