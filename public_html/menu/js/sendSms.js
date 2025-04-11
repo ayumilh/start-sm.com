@@ -78,6 +78,15 @@ function formatCurrency(value) {
   return value.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+// Função para gerar um external_id único
+function generateExternalId(index) {
+  // Gera um ID único usando um prefixo fixo e um valor aleatório
+  let uniqueId = 'f3a5ac11-5d5f-47b0-b3e0-7e982709ca4e'; // Prefixo fixo (pode ser alterado conforme necessário)
+  let randomId = Math.floor(Math.random() * 1000000000); // Gera um número aleatório
+  return uniqueId + randomId + index; // Combina o prefixo fixo, o número aleatório e o índice
+}
+
+
 function sendSms() {
   let smsMessage = document.getElementById('smsMessage').value || '';
 
@@ -99,26 +108,22 @@ function sendSms() {
   let hasNamePlaceholder = smsMessage.includes("{name}");
 
   // A lógica de mapeamento foi revisada para garantir o acesso correto aos dados
-  let personalizedMessages = numbers.map((recipient) => {
-    // Certifique-se de que 't' (telefone) e 'n' (nome) existam no objeto recipient
+  let phoneMessageSending = numbers.map((recipient, index) => {
     let phoneNumber = recipient.t || '';  // Garantir que o telefone seja acessado corretamente
     let recipientName = recipient.n || '';  // Garantir que o nome seja acessado corretamente
 
     // Substitui {name} ou deixa vazio caso não tenha nome
     let personalizedMessage = smsMessage.replace(/{name}/g, recipientName);
 
+    // Gerar um external_id único para cada mensagem
+    let externalId = generateExternalId(index);
+
     // Criar o objeto de mensagem
-    let messageObject = {
-      t: phoneNumber,  // Número de telefone
-      message: personalizedMessage  // Mensagem personalizada
+    return {
+      phone: phoneNumber,  // Número de telefone
+      message: personalizedMessage,  // Mensagem personalizada
+      external_id: externalId  // External ID único
     };
-
-    // Adiciona o nome se a mensagem contiver {name}
-    if (hasNamePlaceholder && recipientName) {
-      messageObject.n = recipientName;  // Inclui o nome se existir
-    }
-
-    return messageObject;
   });
 
   // Verifica se o número de leads (números) excede o limite
@@ -158,30 +163,13 @@ function sendSms() {
 
   // Criação do objeto JSON desejado
   let automationJson = {
-    "automations": [
-      {
-        "fone": personalizedMessages.map((message) => {
-          // Garantindo que o número e o nome sejam corretamente mapeados
-          let phoneObject = {
-            t: message.t  // Número de telefone
-          };
-
-          // Se o nome existir, adiciona a chave "n"
-          if (message.n) {
-            phoneObject.n = message.n;  // Nome (se presente)
-          }
-
-          return phoneObject;  // Garantir que o número seja adicionado corretamente
-        }),
-        "sms_body": smsMessage  // Mensagem que será enviada para todos
-      }
-    ]
+    "phone_message_sending": phoneMessageSending  // Lista de mensagens personalizadas com número de telefone, mensagem e external_id
   };
 
   // Agora, cria o objeto final que inclui o total, mas fora do JSON de automações
   let dataToSend = {
-    automations: automationJson.automations,
-    total: total // Total separado, fora da chave "automations"
+    phone_message_sending: automationJson.phone_message_sending,
+    total: total // Total separado, fora da chave "phone_message_sending"
   };
 
   console.log("Dados a serem enviados para o servidor:", JSON.stringify(dataToSend, null, 2));
@@ -341,6 +329,6 @@ function sendSmsToServer(automationData) {
 function hideSaldoContent() {
   const saldoContent = document.getElementById('saldoContent');
   if (saldoContent) {
-      saldoContent.classList.add('hidden');
+    saldoContent.classList.add('hidden');
   }
 }

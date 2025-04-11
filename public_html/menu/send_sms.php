@@ -31,15 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Verifica se a estrutura do JSON está correta
-    if (isset($data['automations']) && is_array($data['automations']) && isset($data['total'])) {
+    if (isset($data['phone_message_sending']) && is_array($data['phone_message_sending']) && isset($data['total'])) {
         // Recupera o total enviado
         $total = $data['total'];
 
         // Acessa a automação (deve ser um array com pelo menos um item)
-        $automations = $data['automations'];
+        $phoneMessageSending = $data['phone_message_sending'];
 
         // Verifica se há automações para processar
-        if (count($automations) > 0) {
+        if (count($phoneMessageSending) > 0) {
             // Acessa o ID do usuário da sessão
             if (isset($_SESSION['usuario_id'])) {
                 $usuario_id = $_SESSION['usuario_id'];
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Verifica se o token foi encontrado
             if ($stmt->rowCount() > 0) {
                 $tokenData = $stmt->fetch(PDO::FETCH_ASSOC);
-                $accessToken = $tokenData['access_token'];
+                $accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTE5LCJpYXQiOjE3NDI5MzI3MTV9.ifM_9Jnhe7_dceMJiaWf4emy30D2jU8Lt2k3AKkrpso";
             } else {
                 $response = [
                     'success' => false,
@@ -71,16 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit();
             }
 
-            // Agora que o total foi recebido, realiza o envio
-            // Estrutura para enviar ao endpoint
+
             $postData = [
-                "automations" => $automations
+                "name" => "Automação de Envio de SMS",  // Nome da automação
+                "phone_message_sending" => $phoneMessageSending  // Lista de mensagens personalizadas com número de telefone, mensagem e external_id
             ];
 
             // Inicializa cURL para enviar os dados
             $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, "https://portal.keyx.com.br/api/bulk_automations/");
+            curl_setopt($ch, CURLOPT_URL, "https://api.plugni.com.br/v1/sms/bulks");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
