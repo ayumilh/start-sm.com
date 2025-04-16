@@ -26,7 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 gerarTokenKeyX($userId);  // Gera e armazena o token
             }
 
-            header("Location: ../menu/");
+            if ($usuario['nivel_acesso'] === 'admin') {
+                header("Location: ../dashboard/");
+            } else {
+                header("Location: ../menu/");
+            }
 
             exit;
         } else {

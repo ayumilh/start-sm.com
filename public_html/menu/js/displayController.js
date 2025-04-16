@@ -2,49 +2,59 @@ function showContent(contentId, menuItemId) {
     // Esconde todos os conteúdos
     const contents = document.querySelectorAll('.content-section');
     contents.forEach(content => content.style.display = 'none');
-  
+
     // Mostra o conteúdo desejado
     const content = document.getElementById(contentId);
     if (content) {
-      content.style.display = 'block';
+        content.style.display = 'block';
     }
-  
+
     // Remove destaque de todos os botões
     const allButtons = document.querySelectorAll('li button');
     allButtons.forEach(button => {
-      button.classList.remove('text-blue-700', 'font-bold');
-      const span = button.querySelector('span');
-      const icon = button.querySelector('i');
-      if (span) span.classList.remove('text-blue-700', 'font-bold');
-      if (icon) icon.classList.remove('text-blue-700');
+        button.classList.remove('text-blue-700', 'font-bold');
+        const span = button.querySelector('span');
+        const icon = button.querySelector('i');
+        if (span) span.classList.remove('text-blue-700', 'font-bold');
+        if (icon) icon.classList.remove('text-blue-700');
     });
-  
+
     // Remove destaque de todos os <li> pais
     const allLis = document.querySelectorAll('nav ul li');
     allLis.forEach(li => li.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-700'));
-  
+
     // Adiciona destaque ao botão clicado
     const activeButton = document.getElementById(menuItemId);
     if (activeButton) {
-      activeButton.classList.add('text-blue-700', 'font-bold');
-      const span = activeButton.querySelector('span');
-      const icon = activeButton.querySelector('i');
-      if (span) span.classList.add('text-blue-700', 'font-bold');
-      if (icon) icon.classList.add('text-blue-700');
-  
-      // Destaca o <li> pai (item clicado ou submenu pai)
-      const liPai = activeButton.closest('li');
-      if (liPai) liPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
-  
-      // Se for submenu, destaca o <li> do menu principal também
-      const liMenuPai = activeButton.closest('ul')?.closest('li');
-      if (liMenuPai) liMenuPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
+        activeButton.classList.add('text-blue-700', 'font-bold');
+        const span = activeButton.querySelector('span');
+        const icon = activeButton.querySelector('i');
+        if (span) span.classList.add('text-blue-700', 'font-bold');
+        if (icon) icon.classList.add('text-blue-700');
+
+        // Destaca o <li> pai (item clicado ou submenu pai)
+        const liPai = activeButton.closest('li');
+        if (liPai) liPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
+
+        // Se for submenu, destaca o <li> do menu principal também
+        const liMenuPai = activeButton.closest('ul')?.closest('li');
+        if (liMenuPai) liMenuPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
     }
-  
+
     // Fecha menu mobile se estiver aberto
     closeMenu?.();
-  }
-  
+}
+
+
+
+function showSaldoModal() {
+    document.getElementById('saldoModal').classList.remove('hidden');
+}
+
+// Função para fechar o modal
+function closeSaldoModal() {
+    document.getElementById('saldoModal').classList.add('hidden');
+}
 
 // Função para esconder o conteúdo
 function hideContent(contentId) {
@@ -64,7 +74,7 @@ function closeOtherMenus(currentContentId) {
         'smsFlexContent',
         'smsTurboContent',
         'smsLeveContent'
-      ];contentIds.forEach(contentId => {
+    ]; contentIds.forEach(contentId => {
         if (contentId !== currentContentId) {
             hideContent(contentId);
         }
@@ -126,6 +136,11 @@ function showSmsForm(contentId, menuItemId) {
     closeMenu();
 }
 
+// Função para mostrar o modal de histórico de saldo
+function showSaldoModal() {
+    // Exibe o modal
+    $('#saldoModal').modal('show');
+}
 
 function closeTransactionModal() {
     document.getElementById('transactionModal').style.display = "none";

@@ -114,11 +114,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmtHistorico->bindParam(':valor', $total);
                 $stmtHistorico->execute();
 
-                // Se a requisição foi bem-sucedida
+                // Extraindo os dados da resposta
+                $apiResponse = json_decode($responseData, true);
+
+                $statusEnvio = $apiResponse['data']['payload']['status'] ?? 'IN_PROGRESS';
+                $totalMessages = $apiResponse['data']['payload']['total_messages'] ?? count($phoneMessageSending);
+                $nomeCampanha = $apiResponse['data']['payload']['name'] ?? 'Campanha SMS';
+                $tipoEnvio = !empty($data['tipo']) ? strtolower(trim($data['tipo'])) : 'leve';
+
+                // valida tipo
+                $tiposValidos = ['leve', 'flex', 'turbo'];
+                if (!in_array($tipoEnvio, $tiposValidos)) {
+                    $tipoEnvio = 'leve';
+                }
+                
+                // Garante que não divide por zero
+                $valorUnitario = $total;
+
+                // Inserção no banco com os campos existentes
+                $sqlCampanha = "INSERT INTO campanhas_sms (
+    usuario_id,
+    tipo,
+    total_enviados,
+    status_envio,
+    nome_campanha,
+    valor_debitado
+) VALUES (
+    :usuario_id,
+    :tipo,
+    :total,
+    :status_envio,
+    :nome,
+    :valor_unitario
+)";
+                $stmtCampanha = $pdo->prepare($sqlCampanha);
+                $stmtCampanha->bindParam(':usuario_id', $usuario_id);
+                $stmtCampanha->bindParam(':tipo', $tipoEnvio);
+                $stmtCampanha->bindParam(':total', $totalMessages);
+                $stmtCampanha->bindParam(':status_envio', $statusEnvio);
+                $stmtCampanha->bindParam(':nome', $nomeCampanha);
+                $stmtCampanha->bindParam(':valor_unitario', $valorUnitario);
+                $stmtCampanha->execute();
+
+
+
+                // Resposta final
                 $response = [
                     'success' => true,
                     'message' => 'SMS enviados com sucesso!',
-                    'data' => json_decode($responseData)
+                    'data' => $apiResponse
                 ];
             }
 

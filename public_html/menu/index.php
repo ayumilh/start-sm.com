@@ -94,12 +94,30 @@ if (isset($_GET['logout'])) {
       <nav class="flex-1 px-2">
         <ul class="space-y-2 p-4">
           <!-- Envio de SMS em Massa -->
-          <li id="smsMenuItem">
-            <button onclick="showContent('smsContent', 'smsMenuItem')"
+          <li class="relative group" id="smsMenuItem">
+            <button onclick="toggleSubmenu('submenuSmsDesktop')"
               class="flex items-center w-full p-2 text-left hover:text-blue-700 rounded text-gray-800">
               <i class="fas fa-sms mr-3"></i>
               <span class="font-bold">Envio de SMS em Massa</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform"
+                id="iconSmsDesktop"></i>
             </button>
+
+            <ul id="submenuSmsDesktop" class="hidden flex-col space-y-1 pl-10 mt-2 text-sm">
+              <li>
+                <button id="smsLeveLink" onclick="showContent('smsLeveContent', 'smsLeveLink')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Leve</button>
+              </li>
+              <li>
+                <button id="smsTurboLink" onclick="showContent('smsTurboContent', 'smsTurboLink')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Turbo</button>
+              </li>
+              <li>
+                <button id="smsFlexLink" onclick="showContent('smsFlexContent', 'smsFlexLink')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Flex</button>
+              </li>
+            </ul>
+
           </li>
 
           <!-- Disparo WhatsApp -->
@@ -180,7 +198,7 @@ if (isset($_GET['logout'])) {
             <i class="fas fa-wallet mr-2 text-lg text-blue-700"></i> <!-- Ícone de Carteira -->
             <p class="text-sm text-gray-800">
               Saldo disponível: <strong class="ml-1 saldoText">
-              R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?>
+                R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?>
               </strong>
             </p>
           </div>
@@ -223,12 +241,28 @@ if (isset($_GET['logout'])) {
       <nav class="flex-1 px-2">
         <ul class="space-y-2 p-4">
           <!-- Envio de SMS em Massa -->
-          <li id="smsMenuItem">
-            <button onclick="showContent('smsContent', 'smsMenuItem')"
+          <li class="relative group" id="smsMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuSmsMobile')"
               class="flex items-center w-full p-2 text-left hover:text-blue-700 rounded text-gray-800">
               <i class="fas fa-sms mr-3"></i>
               <span class="font-bold">Envio de SMS em Massa</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconSmsMobile"></i>
             </button>
+
+            <ul id="submenuSmsMobile" class="hidden flex-col space-y-1 pl-10 mt-2 text-sm">
+              <li>
+                <button id="smsLeveLinkMobile" onclick="showContent('smsLeveContent', 'smsLeveLinkMobile')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Leve</button>
+              </li>
+              <li>
+                <button id="smsTurboLinkMobile" onclick="showContent('smsTurboContent', 'smsTurboLinkMobile')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Turbo</button>
+              </li>
+              <li>
+                <button id="smsFlexLinkMobile" onclick="showContent('smsFlexContent', 'smsFlexLinkMobile')"
+                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Flex</button>
+              </li>
+            </ul>
           </li>
 
           <!-- Disparo WhatsApp -->
@@ -494,6 +528,123 @@ if (isset($_GET['logout'])) {
         </div>
       </div>
 
+      <!-- Disparo Flex -->
+      <div id="smsFlexContent" class="modal hidden mt-40 md:mt-46 lg:mt-0 content-section bg-white p-6 rounded-lg shadow-lg w-full lg:max-w-2xl xl:max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl text-gray-800 font-semibold">FLEX</h2>
+        </div>
+
+        <div class="flex flex-col gap-4 items-start">
+          <p class="text-gray-800 font-semibold">Digite a mensagem a ser enviada:</p>
+          <textarea id="smsFlexMessage" rows="4" maxlength="200" placeholder="Digite sua mensagem"
+            class="w-full p-3 border border-gray-300 rounded-md text-base text-gray-800 font-normal"></textarea>
+
+          <p class="text-gray-800 font-semibold">Carregar lista de números (.txt):</p>
+          <input type="file" id="flexFile" accept=".txt"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold"
+            onchange="handleFlexFile()">
+
+          <p id="flexFileStatus" class="text-gray-800 font-semibold">Nenhum arquivo carregado</p>
+          <p id="flexQuantityText" class="text-gray-800"></p>
+
+          <p class="total text-yellow-600 font-semibold">
+            Valor do envio: <span class="">-</span> R$
+            <span id="flexTotal">0,00</span>
+          </p>
+
+          <p class="text-gray-800 font-semibold text-xl">Saldo restante: <span id="flexSaldoRestante">R$ 0,00</span></p>
+
+          <hr class="border border-gray-200 w-full">
+
+          <div class="w-full flex flex-col md:flex-row gap-4 justify-between items-start lg:items-center">
+            <p class="w-full text-blue-500 font-semibold text-2xl whitespace-nowrap">
+              Saldo atual: <span id="userBalance" class="text-lg text-gray-900">R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?></span>
+            </p>
+            <button id="btnEnviarFlex" class="w-full confirmaCompra px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:shadow-sm" disabled>
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disparo Turbo -->
+      <div id="smsTurboContent" class="modal hidden mt-40 md:mt-46 lg:mt-0 content-section bg-white p-6 rounded-lg shadow-lg w-full lg:max-w-2xl xl:max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl text-gray-800 font-semibold">TURBO</h2>
+        </div>
+
+        <div class="flex flex-col gap-4 items-start">
+          <p class="text-gray-800 font-semibold">Digite a mensagem a ser enviada:</p>
+          <textarea id="smsTurboMessage" rows="4" maxlength="200" placeholder="Digite sua mensagem"
+            class="w-full p-3 border border-gray-300 rounded-md text-base text-gray-800 font-normal"></textarea>
+
+          <p class="text-gray-800 font-semibold">Carregar lista de números (.txt):</p>
+          <input type="file" id="turboFile" accept=".txt"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold"
+            onchange="handleTurboFile()">
+
+          <p id="turboFileStatus" class="text-gray-800 font-semibold">Nenhum arquivo carregado</p>
+          <p id="turboQuantityText" class="text-gray-800"></p>
+
+          <p class="total text-yellow-600 font-semibold">
+            Valor do envio: <span class="">-</span> R$
+            <span id="turboTotal">0,00</span>
+          </p>
+
+          <p class="text-gray-800 font-semibold text-xl">Saldo restante: <span id="turboSaldoRestante">R$ 0,00</span></p>
+
+          <hr class="border border-gray-200 w-full">
+
+          <div class="w-full flex flex-col md:flex-row gap-4 justify-between items-start lg:items-center">
+            <p class="w-full text-blue-500 font-semibold text-2xl whitespace-nowrap">
+              Saldo atual: <span id="userBalance" class="text-lg text-gray-900">R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?></span>
+            </p>
+            <button id="btnEnviarTurbo" class="w-full confirmaCompra px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:shadow-sm" disabled>
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disparo Leve -->
+      <div id="smsLeveContent" class="modal hidden mt-40 md:mt-46 lg:mt-0 content-section bg-white p-6 rounded-lg shadow-lg w-full lg:max-w-2xl xl:max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl text-gray-800 font-semibold">LEVE</h2>
+        </div>
+
+        <div class="flex flex-col gap-4 items-start">
+          <p class="text-gray-800 font-semibold">Digite a mensagem a ser enviada:</p>
+          <textarea id="smsLeveMessage" rows="4" maxlength="200" placeholder="Digite sua mensagem"
+            class="w-full p-3 border border-gray-300 rounded-md text-base text-gray-800 font-normal"></textarea>
+
+          <p class="text-gray-800 font-semibold">Carregar lista de números (.txt):</p>
+          <input type="file" id="leveFile" accept=".txt"
+            class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold"
+            onchange="handleLeveFile()">
+
+          <p id="leveFileStatus" class="text-gray-800 font-semibold">Nenhum arquivo carregado</p>
+          <p id="leveQuantityText" class="text-gray-800"></p>
+
+          <p class="total text-yellow-600 font-semibold">
+            Valor do envio: <span class="">-</span> R$
+            <span id="leveTotal">0,00</span>
+          </p>
+
+          <p class="text-gray-800 font-semibold text-xl">Saldo restante: <span id="leveSaldoRestante">R$ 0,00</span></p>
+
+          <hr class="border border-gray-200 w-full">
+
+          <div class="w-full flex flex-col md:flex-row gap-4 justify-between items-start lg:items-center">
+            <p class="w-full text-blue-500 font-semibold text-2xl whitespace-nowrap">
+              Saldo atual: <span id="userBalance" class="text-lg text-gray-900">R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?></span>
+            </p>
+            <button id="btnEnviarLeve" class="w-full confirmaCompra px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:shadow-sm" disabled>
+              Enviar
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Modal de Dados da Transação -->
       <div id="transactionModal"
         class="modal flex flex-col content-section bg-white p-6 rounded-lg shadow-lg w-full lg:max-w-2xl xl:max-w-3xl mx-auto mt-40 md:mt-46 lg:mt-0"
@@ -732,268 +883,488 @@ if (isset($_GET['logout'])) {
     href="https://cdn.positus.global/production/resources/robbu/whatsapp-button/whatsapp-button.css">
 
   <script>
-    // Função para mostrar o modal de histórico de saldo
-    function showSaldoModal() {
-      // Exibe o modal
-      $('#saldoModal').modal('show');
+    function toggleSubmenu(id) {
+      const submenu = document.getElementById(id);
+      const icon = id === 'submenuSmsDesktop' ? document.getElementById('iconSmsDesktop') : document.getElementById('iconSmsMobile');
+
+      if (submenu.classList.contains('hidden')) {
+        submenu.classList.remove('hidden');
+        submenu.classList.add('flex');
+        icon.classList.add('rotate-180');
+      } else {
+        submenu.classList.add('hidden');
+        submenu.classList.remove('flex');
+        icon.classList.remove('rotate-180');
+      }
+    }
+    // TESTE DO JS DO SMS -mover dps
+    document.addEventListener("DOMContentLoaded", function() {
+      const btnFlex = document.getElementById("btnEnviarFlex");
+      const btnTurbo = document.getElementById("btnEnviarTurbo");
+      const btnLeve = document.getElementById("btnEnviarLeve");
+
+      if (btnFlex) {
+        btnFlex.addEventListener("click", () => enviarSmsPorTipo('flex'));
+      }
+
+      if (btnTurbo) {
+        btnTurbo.addEventListener("click", () => enviarSmsPorTipo('turbo'));
+      }
+
+      if (btnLeve) {
+        btnLeve.addEventListener("click", () => enviarSmsPorTipo('leve'));
+      }
+    });
+
+    function validarEnvioModal(tipo) {
+      const mensagem = document.getElementById(`sms${capitalize(tipo)}Message`);
+      const botao = document.getElementById(`btnEnviar${capitalize(tipo)}`);
+
+      if (!mensagem || !botao) return;
+
+      const mensagemPreenchida = mensagem.value.trim().length > 0;
+      const numerosValidos = window.numbersWithNames && window.numbersWithNames.length >= 10;
+
+      botao.disabled = !(mensagemPreenchida && numerosValidos);
     }
 
-    let pacoteSelecionado = null;
+    document.getElementById("smsFlexMessage").addEventListener("input", () => validarEnvioModal("flex"));
+    document.getElementById("smsTurboMessage").addEventListener("input", () => validarEnvioModal("turbo"));
+    document.getElementById("smsLeveMessage").addEventListener("input", () => validarEnvioModal("leve"));
 
-    const dddsPorEstado = {
-      "SP": [11, 12, 13, 14, 15, 16, 17, 18, 19],
-      "RJ": [21, 22, 24],
-      "MG": [31, 32, 33, 34, 35, 37, 38],
-      "ES": [27, 28],
-      "PR": [41, 42, 43, 44, 45, 46],
-      "SC": [47, 48, 49],
-      "RS": [51, 53, 54, 55],
-      "DF": [61],
-      "GO": [62, 64],
-      "MT": [65, 66],
-      "MS": [67],
-      "TO": [63],
-      "BA": [71, 73, 74, 75, 77],
-      "SE": [79],
-      "PE": [81, 87],
-      "AL": [82],
-      "PB": [83],
-      "RN": [84],
-      "CE": [85, 88],
-      "PI": [86, 89],
-      "PA": [91, 93, 94],
-      "AP": [96],
-      "RR": [95],
-      "AM": [92, 97],
-      "AC": [68],
-      "RO": [69],
-      "MA": [98, 99]
-    };
 
-    let quantidadeSelecionada = 0;
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const pacotes = document.querySelectorAll('.pacote');
 
-      // Selecionar pacote
-      pacotes.forEach(pacote => {
-        pacote.addEventListener('click', () => {
-          // Remove a seleção dos outros pacotes
-          pacotes.forEach(p => p.classList.remove('bg-blue-100', 'border-blue-600'));
+    function enviarSmsPorTipo(tipoDisparo) {
+      console.log("Tipo de disparo:", tipoDisparo); // Debug: Verifica o tipo de disparo atual
+      let textareaId = '';
+      if (tipoDisparo === 'flex') textareaId = 'smsFlexMessage';
+      else if (tipoDisparo === 'turbo') textareaId = 'smsTurboMessage';
+      else if (tipoDisparo === 'leve') textareaId = 'smsLeveMessage';
 
-          // Adiciona classe de seleção ao clicado
-          pacote.classList.add('bg-blue-100', 'border-blue-600');
-          pacoteSelecionado = pacote;
+      const smsMessage = document.getElementById(textareaId)?.value?.trim() || '';
 
-          // Atribui a quantidade ao clicar no pacote
-          quantidadeSelecionada = parseInt(pacote.dataset.quantidade);
-        });
+      if (!smsMessage) {
+        alert("Digite a mensagem antes de enviar.");
+        return;
+      }
+
+      if (!window.numbersWithNames || window.numbersWithNames.length === 0) {
+        alert("Você precisa carregar um arquivo válido antes de enviar.");
+        return;
+      }
+
+      const numbers = window.numbersWithNames;
+      const phoneMessageSending = numbers.map((recipient, index) => {
+        const phone = recipient.t;
+        const name = recipient.n || '';
+        const message = smsMessage.replace(/{name}/g, name);
+        const external_id = generateExternalId(index);
+        return {
+          phone,
+          message,
+          external_id
+        };
       });
 
-      // Confirmar pacote
-      const btnConfirmar = document.getElementById('btnConfirmarPacote');
-      const btnGerar = document.getElementById('btnGerarNumeros');
+      // Definir preço por tipo
+      let pricePerSms = 0.12;
+      if (tipoDisparo === 'turbo') pricePerSms = 0.14;
+      else if (tipoDisparo === 'flex') pricePerSms = 0.09;
+      else if (tipoDisparo === 'leve') pricePerSms = 0.08;
 
-      btnConfirmar.addEventListener('click', () => {
-        if (pacoteSelecionado) {
-          const preco = parseFloat(pacoteSelecionado.dataset.preco);
-          const pacoteId = parseInt(pacoteSelecionado.dataset.pacote);
+      const total = phoneMessageSending.length * pricePerSms;
 
-          fetch('confirmar_pacote.php', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: `preco=${preco}&pacote_id=${pacoteId}`
-            })
-            .then(res => res.json())
-            .then(data => {
-              if (data.status === 'success') {
-                btnGerar.classList.remove('hidden');
-                alert(
-                  data.mensagem +
-                  "\nValor descontado: R$ " + preco.toFixed(2).replace('.', ',') +
-                  "\nNovo saldo: R$ " + data.novoSaldo
-                );
+      const userBalanceText = document.getElementById("userBalance").innerText;
+      const userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
 
-                // Atualiza o saldo na interface chamando o getSaldo.php novamente
-                fetch('getSaldo.php')
-                  .then(response => response.json())
-                  .then(data => {
-                    if (data.error) {
-                      console.error("Erro ao buscar saldo:", data.error);
-                    } else {
-                      const saldoElements = document.querySelectorAll(".saldoText");
+      if (userBalance < total) {
+        alert("Saldo insuficiente para enviar os SMS.");
+        return;
+      }
 
-                      // Verifica se o valor de saldo é um número
-                      const saldo = parseFloat(data.saldo);
+      const dataToSend = {
+        phone_message_sending: phoneMessageSending,
+        total: total,
+        tipo: tipoDisparo
+      };
 
-                      if (!isNaN(saldo)) {
-                        // Formata o saldo com separadores de milhar e vírgula para os decimais
-                        const formattedSaldo = saldo.toLocaleString('pt-BR', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2
-                        });
+      console.log("Enviando SMS com tipo:", tipoDisparo, dataToSend);
+      sendSmsToServer(dataToSend);
+    }
 
-                        // Atualiza o saldo para cada elemento com a classe 'saldoText'
-                        saldoElements.forEach(element => {
-                          // Atualiza o conteúdo do elemento com o saldo formatado
-                          element.innerText = `R$ ${formattedSaldo}`;
-                        });
-                      } else {
-                        console.error("Erro: saldo retornado não é um número válido.");
-                      }
-                    }
-                  })
-                  .catch(error => {
-                    console.error("Erro ao obter o saldo:", error);
-                  });
+    // Função para calcular o custo do SMS e verificar os limites
+    function calculateSmsCost() {
+      let quantity = parseInt(document.getElementById("smsQuantity").value);
 
-              } else {
-                alert(data.mensagem);
-              }
-            });
+      // Garantir que a quantidade não ultrapasse 1000
+      if (quantity > 1000) {
+        alert("A quantidade máxima de SMS é 1000.");
+        document.getElementById("smsQuantity").value = 1000; // Limita a quantidade a 1000
+        quantity = 1000; // Atualiza a quantidade para 1000
+      }
 
+      // Pega o saldo diretamente do HTML
+      let userBalanceText = document.getElementById("userBalance").innerText;
+
+      // Remove "R$" e formatação de milhar com ponto e vírgula, converte para número
+      let userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
+
+      if (isNaN(quantity) || quantity < 10) {
+        document.getElementById("smsTotal").innerText = "0,00";
+        document.getElementById("discountedBalance").innerText = formatCurrency(userBalance);
+        return;
+      }
+
+      // Lógica para preço escalonado
+      let pricePerSms = 0.12; // Preço padrão
+      if (quantity >= 500000) {
+        pricePerSms = 0.11; // Preço reduzido para acima de 500.000 SMS
+      }
+
+      // Calculando o valor total
+      let total = quantity * pricePerSms;
+
+      // Exibe o valor total a ser pago pelos SMS
+      document.getElementById("smsTotal").innerText = formatCurrency(total);
+
+      // Verifica se o saldo é suficiente
+      if (userBalance >= total) {
+        // Calcular o saldo restante após o desconto
+        let discountedBalance = userBalance - total;
+
+        // Exibe o saldo restante após o desconto
+        document.getElementById("discountedBalance").innerText = formatCurrency(discountedBalance);
+      } else {
+        // Caso o saldo não seja suficiente
+        document.getElementById("discountedBalance").innerText = "Saldo insuficiente";
+      }
+    }
+
+
+    // Função para validar se há mensagem antes de permitir o envio
+    function validateMessage() {
+      let smsMessage = document.getElementById("smsMessage").value.trim();
+      let sendButton = document.getElementById("sendSmsButton");
+      if (smsMessage.length > 0) {
+        sendButton.disabled = false; // Ativa o botão de envio
+      } else {
+        sendButton.disabled = true; // Desativa o botão de envio
+      }
+    }
+
+
+    // Adicionando o evento para verificar a mensagem ao digitar
+    document.getElementById("smsMessage").addEventListener("input", validateMessage);
+
+
+    // Função para atualizar o saldo do usuário
+    function updateUserBalance() {
+      // Pega o saldo diretamente do HTML
+      let userBalanceText = document.getElementById("userBalance").innerText;
+
+      // Remove "R$" e formatação de milhar com ponto e vírgula, converte para número
+      let userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
+
+      document.getElementById("userBalance").innerText = formatCurrency(userBalance);
+    }
+
+    // Função para formatar o valor como moeda
+    function formatCurrency(value) {
+      return value.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    // Função para gerar um external_id único
+    function generateExternalId(index) {
+      // Gera um ID único usando um prefixo fixo e um valor aleatório
+      let uniqueId = 'f3a5ac11-5d5f-47b0-b3e0-7e982709ca4e'; // Prefixo fixo (pode ser alterado conforme necessário)
+      let randomId = Math.floor(Math.random() * 1000000000); // Gera um número aleatório
+      return uniqueId + randomId + index; // Combina o prefixo fixo, o número aleatório e o índice
+    }
+
+    function getCurrentSmsType() {
+      if (!document.getElementById('smsFlexContent').classList.contains('hidden')) return 'flex';
+      if (!document.getElementById('smsTurboContent').classList.contains('hidden')) return 'turbo';
+      if (!document.getElementById('smsLeveContent').classList.contains('hidden')) return 'leve';
+      return 'padrao';
+    }
+
+    function sendSms() {
+      let smsMessage = document.getElementById('smsMessage').value || '';
+
+      if (!smsMessage) {
+        alert("Por favor, digite uma mensagem.");
+        return;
+      }
+
+      // Verifica se os números foram processados corretamente
+      if (!window.numbersToSend || window.numbersToSend.length === 0) {
+        alert("Nenhum número encontrado para envio.");
+        return;
+      }
+
+      // Usando window.numbersWithNames para mapear os números e nomes
+      let numbers = window.numbersWithNames;
+
+      // Verifica se a mensagem contém {name}
+      let hasNamePlaceholder = smsMessage.includes("{name}");
+
+      // A lógica de mapeamento foi revisada para garantir o acesso correto aos dados
+      let phoneMessageSending = numbers.map((recipient, index) => {
+        let phoneNumber = recipient.t || ''; // Garantir que o telefone seja acessado corretamente
+        let recipientName = recipient.n || ''; // Garantir que o nome seja acessado corretamente
+
+        // Substitui {name} ou deixa vazio caso não tenha nome
+        let personalizedMessage = smsMessage.replace(/{name}/g, recipientName);
+
+        // Gerar um external_id único para cada mensagem
+        let externalId = generateExternalId(index);
+
+        // Criar o objeto de mensagem
+        return {
+          phone: phoneNumber, // Número de telefone
+          message: personalizedMessage, // Mensagem personalizada
+          external_id: externalId // External ID único
+        };
+      });
+
+      // Verifica se o número de leads (números) excede o limite
+      if (numbers.length > 1000) {
+        alert("O número máximo de leads por automação é 1000.");
+        return;
+      }
+
+      const tipoDisparo = getCurrentSmsType();
+      let pricePerSms;
+
+      if (tipoDisparo === 'turbo') pricePerSms = 0.14;
+      else if (tipoDisparo === 'flex') pricePerSms = 0.09;
+      else if (tipoDisparo === 'leve') pricePerSms = 0.08;
+      else pricePerSms = 0.12; // fallback para "padrao"
+
+      let quantity = numbers.length;
+      let total = quantity * pricePerSms;
+
+      // Verifica o saldo do usuário
+      let userBalanceText = document.getElementById("userBalance").innerText;
+      let userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
+
+      if (userBalance < total) {
+        document.getElementById("discountedBalance").innerText = "Saldo insuficiente";
+        alert("Saldo insuficiente para realizar o envio.");
+        return;
+      } else {
+        let discountedBalance = userBalance - total;
+
+        // Verifica se o saldo após a subtração será negativo
+        if (discountedBalance < 0) {
+          document.getElementById("discountedBalance").innerText = "Saldo insuficiente";
+          alert("Saldo insuficiente para realizar o envio.");
+          return;
         } else {
-          alert('Por favor, selecione um pacote primeiro.');
-        }
-      });
-    });
-
-    function gerarNumeroAleatorio(estado = null) {
-      const estados = Object.keys(dddsPorEstado);
-      const estadoEscolhido = estado && dddsPorEstado[estado] ? estado : estados[Math.floor(Math.random() * estados.length)];
-      const ddd = dddsPorEstado[estadoEscolhido][Math.floor(Math.random() * dddsPorEstado[estadoEscolhido].length)];
-      const numero = `${ddd}9${Math.floor(10000000 + Math.random() * 90000000)},`;
-      return numero;
-    }
-
-    let listaNumerosGerados = [];
-
-    function gerarListaNumeros() {
-      const estado = document.getElementById("estadoSelect").value;
-      const quantidade = quantidadeSelecionada;
-      const listaContainer = document.getElementById("listaNumeros");
-      const btnDownload = document.getElementById("btnDownloadTxt");
-
-      const btn = document.getElementById("btnGerarNumeros");
-      const spinner = document.getElementById("loadingSpinner");
-      const btnText = document.getElementById("btnText");
-
-      // Exibe o spinner (ícone de loading) e desativa o botão
-      spinner.classList.remove("hidden");
-      btn.disabled = true;
-      btnText.innerText = "Gerando...";
-
-      listaContainer.innerHTML = "";
-      listaNumerosGerados = [];
-
-      const numerosUnicos = new Set();
-
-      // Gera números até atingir a quantidade desejada
-      while (numerosUnicos.size < quantidade) {
-        const numero = gerarNumeroAleatorio(estado);
-        if (!numerosUnicos.has(numero)) {
-          numerosUnicos.add(numero);
-
-          const item = document.createElement("div");
-          item.textContent = numero;
-          listaContainer.appendChild(item);
+          document.getElementById("discountedBalance").innerText = formatCurrency(discountedBalance); // Atualiza o saldo restante
         }
       }
 
-      listaNumerosGerados = Array.from(numerosUnicos);
+      // Criação do objeto JSON desejado
+      let automationJson = {
+        "phone_message_sending": phoneMessageSending // Lista de mensagens personalizadas com número de telefone, mensagem e external_id
+      };
 
-      spinner.classList.add("hidden");
-      btn.disabled = false;
+      // Agora, cria o objeto final que inclui o total, mas fora do JSON de automações
+      let dataToSend = {
+        phone_message_sending: automationJson.phone_message_sending,
+        total: total // Total separado, fora da chave "phone_message_sending"
+      };
 
-      // Mostra o botão de download se tiver pelo menos 1 número
-      btnText.innerText = "Gerar Número";
-      btnDownload.classList.remove("hidden");
+      console.log("Dados a serem enviados para o servidor:", JSON.stringify(dataToSend, null, 2));
 
-      btn.classList.add("hidden");
+      console.log("payload enviado:", JSON.stringify(dataToSend, null, 2));
+
+
+      // Enviar os dados para o servidor
+      sendSmsToServer(dataToSend);
     }
 
-    function baixarListaTxt() {
-      const conteudo = listaNumerosGerados.join('\n');
-      const blob = new Blob([conteudo], {
-        type: 'text/plain'
+    // Função para processar o arquivo e extrair os números
+    function processFile(fileUpload) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+          let lines = event.target.result.split("\n");
+          let numbers = [];
+
+          // Filtrando linhas vazias e processando números válidos
+          lines.forEach(line => {
+            let parts = line.trim().split(","); // Supondo que o arquivo tenha "numero, nome"
+
+            // Verifica se a linha contém pelo menos um número válido
+            if (parts.length >= 1) {
+              let number = parts[0].trim();
+              let name = parts[1] ? parts[1].trim() : null; // Nome é opcional, se não existir será null
+
+              // Ignora números vazios
+              if (number) {
+                // Criação do objeto recipient
+                let recipient = {
+                  t: number
+                }; // Armazenando número como t
+
+                // Se o nome existir, adiciona ao objeto
+                if (name) {
+                  recipient.n = name; // Armazenando nome como n
+                }
+
+                // Adiciona o recipient no array numbers
+                numbers.push(recipient);
+              }
+            }
+          });
+
+          // Verifica se o número de contatos é inferior a 10
+          if (numbers.length < 10) {
+            reject("O arquivo deve conter pelo menos 10 números.");
+          } else {
+            resolve(numbers);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsText(fileUpload);
       });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "lista_numeros.txt";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
     }
 
-    function openModalNumero() {
-      document.getElementById("modalNumero").classList.remove("hidden");
-      document.getElementById("modalNumero").classList.add("flex");
-    }
+    // Função para contabilizar a quantidade de números no arquivo e substituir o campo de input
+    function handleFileChange() {
+      let fileUpload = document.getElementById("fileUpload").files[0];
 
-    function closeModalNumero() {
-      document.getElementById("modalNumero").classList.remove("flex");
-      document.getElementById("modalNumero").classList.add("hidden");
-      document.getElementById("numeroGerado").innerText = '';
-    }
+      if (fileUpload) {
+        processFile(fileUpload)
+          .then((numbers) => {
+            // Filtra números duplicados (usando Set)
+            let uniqueNumbers = [...new Set(numbers.map(recipient => recipient.t))];
 
-    function showSaldoModal() {
-      document.getElementById('saldoModal').classList.remove('hidden');
-    }
+            // Verifica se o número de contatos é inferior a 10
+            if (uniqueNumbers.length < 10) {
+              alert("O arquivo deve conter pelo menos 10 números.");
+              document.getElementById("fileStatus").innerText = "Arquivo inválido";
+              document.getElementById("fileStatus").style.color = "red";
+              document.getElementById("fileUpload").value = '';
+              return; // Impede o processamento e envio dos dados
+            }
 
-    // Função para fechar o modal
-    function closeSaldoModal() {
-      document.getElementById('saldoModal').classList.add('hidden');
-    }
+            // Atualiza a quantidade de SMS com base no número de contatos únicos
+            let quantity = uniqueNumbers.length;
+            document.getElementById("smsQuantityText").innerText = "Quantidade de SMS a serem enviadas: " + quantity;
 
+            // Preço por SMS
+            let pricePerSms = 0.12;
+            let total = quantity * pricePerSms;
+            document.getElementById("smsTotal").innerText = formatCurrency(total);
 
-    // Função para atualizar a mensagem gerada
-    function atualizarMensagem() {
-      // Obtém os valores dos campos do formulário
-      const link = document.getElementById('link').value;
-      const encurtador = document.getElementById('encurtador').value;
-      const mensagemElement = document.getElementById('mensagem');
-      let mensagemSelecionada = mensagemElement.options[mensagemElement.selectedIndex].text; // Pega o texto da opção selecionada
+            // Calcula o saldo restante após o desconto
+            let userBalanceText = document.getElementById("userBalance").innerText;
+            let userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
 
-      // Remove qualquer ocorrência de ##LINK## na mensagem selecionada
-      mensagemSelecionada = mensagemSelecionada.replace("##LINK##", "");
+            if (userBalance < total) {
+              document.getElementById("discountedBalance").innerText = "Saldo insuficiente";
+              alert("Saldo insuficiente para realizar o envio.");
+              document.getElementById("fileUpload").value = '';
+              return;
+            } else {
+              let discountedBalance = userBalance - total;
+              document.getElementById("discountedBalance").innerText = formatCurrency(discountedBalance); // Atualiza o saldo restante
 
-      // Se o link for inserido, adiciona à mensagem
-      if (link) {
-        mensagemSelecionada += `, para maiores detalhes acesse ${link}`;
+              // Alterando o texto e cor para "Arquivo carregado"
+              document.getElementById("fileStatus").innerText = "Arquivo carregado";
+              document.getElementById("fileStatus").style.color = "green";
+            }
+
+            // Salva os números processados globalmente (para usá-los depois)
+            window.numbersToSend = uniqueNumbers;
+            window.numbersWithNames = numbers; // Armazenando números e nomes
+          })
+          .catch((error) => {
+            alert(error); // Exibe erro caso o arquivo não seja válido
+          });
+      } else {
+        // Caso nenhum arquivo tenha sido selecionado
+        document.getElementById("fileStatus").innerText = "Nenhum arquivo carregado";
+        document.getElementById("fileStatus").style.color = "red";
       }
-
-      // Adiciona o encurtador à mensagem
-      mensagemSelecionada += ` (Encurtador: ${encurtador})`;
-
-      // Atribui a mensagem gerada ao campo de texto
-      const mensagemGeradaField = document.getElementById('mensagem-gerada');
-      mensagemGeradaField.value = mensagemSelecionada; // Exibe a mensagem gerada no campo
     }
 
-    // Chama a função quando a página for carregada para garantir que a mensagem seja gerada automaticamente com as opções selecionadas
-    document.addEventListener('DOMContentLoaded', () => {
-      atualizarMensagem();
-    });
 
-    // Chama a função sempre que um dos campos relevantes for alterado
-    document.getElementById('link').addEventListener('input', atualizarMensagem);
-    document.getElementById('mensagem').addEventListener('change', atualizarMensagem);
-    document.getElementById('encurtador').addEventListener('change', atualizarMensagem);
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Função para enviar os dados do SMS para o PHP
+    function sendSmsToServer(automationData) {
+      const data = automationData;
+
+      console.log('Enviando dados para o servidor:', data);
+
+      fetch('send_sms.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.text()) // Receber como texto para debugar
+        .then(responseText => {
+          console.log('Resposta bruta do servidor:', responseText);
+          try {
+            const responseData = JSON.parse(responseText); // Agora tenta converter em JSON
+            console.log('Resposta JSON do servidor:', responseData);
+
+            // Verifica a resposta do servidor
+            if (responseData.success) {
+              alert('SMS enviados com sucesso!');
+              document.getElementById('smsContent').style.display = "none";
+            } else {
+              alert('Erro ao enviar SMS: ' + responseData.message);
+            }
+
+          } catch (error) {
+            console.error('Erro ao processar JSON:', error);
+            alert('Erro ao processar a resposta do servidor. Resposta recebida não é JSON.');
+          }
+
+          hideSaldoContent(); // Esconde o conteúdo de saldo após o envio
+        })
+        .catch(error => {
+          console.error('Erro ao enviar a requisição:', error);
+          alert('Ocorreu um erro ao tentar enviar os SMS.');
+        });
+    }
+
+    function hideSaldoContent() {
+      const saldoContent = document.getElementById('saldoContent');
+      if (saldoContent) {
+        saldoContent.classList.add('hidden');
+      }
+    }
+
+    window.enviarSmsPorTipo = enviarSmsPorTipo;
   </script>
+
+  <!-- <script src="js/sendSms.js"></script> -->
+
+  <script src="js/geradorTelefone.js"></script>
 
 
   <script src="js/displayController.js"></script>
+
+  <script src="js/handleFileController.js"></script>
 
   <script src="js/qrcode.js"></script>
 
   <script src="js/menu.js"></script>
 
-  <script src="js/sendSms.js"></script>
 
   <!-- Inclusão do jQuery -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

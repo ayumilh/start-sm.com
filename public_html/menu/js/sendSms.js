@@ -1,3 +1,101 @@
+document.addEventListener("DOMContentLoaded", function() {
+  const btnFlex = document.getElementById("btnEnviarFlex");
+  const btnTurbo = document.getElementById("btnEnviarTurbo");
+  const btnLeve = document.getElementById("btnEnviarLeve");
+
+  if (btnFlex) {
+    btnFlex.addEventListener("click", () => enviarSmsPorTipo('flex'));
+  }
+
+  if (btnTurbo) {
+    btnTurbo.addEventListener("click", () => enviarSmsPorTipo('turbo'));
+  }
+
+  if (btnLeve) {
+    btnLeve.addEventListener("click", () => enviarSmsPorTipo('leve'));
+  }
+});
+
+function validarEnvioModal(tipo) {
+  const mensagem = document.getElementById(`sms${capitalize(tipo)}Message`);
+  const botao = document.getElementById(`btnEnviar${capitalize(tipo)}`);
+
+  if (!mensagem || !botao) return;
+
+  const mensagemPreenchida = mensagem.value.trim().length > 0;
+  const numerosValidos = window.numbersWithNames && window.numbersWithNames.length >= 10;
+
+  botao.disabled = !(mensagemPreenchida && numerosValidos);
+}
+
+document.getElementById("smsFlexMessage").addEventListener("input", () => validarEnvioModal("flex"));
+document.getElementById("smsTurboMessage").addEventListener("input", () => validarEnvioModal("turbo"));
+document.getElementById("smsLeveMessage").addEventListener("input", () => validarEnvioModal("leve"));
+
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
+function enviarSmsPorTipo(tipoDisparo) {
+  console.log("Tipo de disparo:", tipoDisparo); // Debug: Verifica o tipo de disparo atual
+  let textareaId = '';
+  if (tipoDisparo === 'flex') textareaId = 'smsFlexMessage';
+  else if (tipoDisparo === 'turbo') textareaId = 'smsTurboMessage';
+  else if (tipoDisparo === 'leve') textareaId = 'smsLeveMessage';
+
+  const smsMessage = document.getElementById(textareaId)?.value?.trim() || '';
+
+  if (!smsMessage) {
+    alert("Digite a mensagem antes de enviar.");
+    return;
+  }
+
+  if (!window.numbersWithNames || window.numbersWithNames.length === 0) {
+    alert("Você precisa carregar um arquivo válido antes de enviar.");
+    return;
+  }
+
+  const numbers = window.numbersWithNames;
+  const phoneMessageSending = numbers.map((recipient, index) => {
+    const phone = recipient.t;
+    const name = recipient.n || '';
+    const message = smsMessage.replace(/{name}/g, name);
+    const external_id = generateExternalId(index);
+    return {
+      phone,
+      message,
+      external_id
+    };
+  });
+
+  // Definir preço por tipo
+  let pricePerSms = 0.12;
+  if (tipoDisparo === 'turbo') pricePerSms = 0.14;
+  else if (tipoDisparo === 'flex') pricePerSms = 0.09;
+  else if (tipoDisparo === 'leve') pricePerSms = 0.08;
+
+  const total = phoneMessageSending.length * pricePerSms;
+
+  const userBalanceText = document.getElementById("userBalance").innerText;
+  const userBalance = parseFloat(userBalanceText.replace("R$", "").replace(".", "").replace(",", ".").trim());
+
+  if (userBalance < total) {
+    alert("Saldo insuficiente para enviar os SMS.");
+    return;
+  }
+
+  const dataToSend = {
+    phone_message_sending: phoneMessageSending,
+    total: total,
+    tipo: tipoDisparo
+  };
+
+  console.log("Enviando SMS com tipo:", tipoDisparo, dataToSend);
+  sendSmsToServer(dataToSend);
+}
+
 // Função para calcular o custo do SMS e verificar os limites
 function calculateSmsCost() {
   let quantity = parseInt(document.getElementById("smsQuantity").value);
@@ -22,9 +120,9 @@ function calculateSmsCost() {
   }
 
   // Lógica para preço escalonado
-  let pricePerSms = 0.12;  // Preço padrão
+  let pricePerSms = 0.12; // Preço padrão
   if (quantity >= 500000) {
-    pricePerSms = 0.11;  // Preço reduzido para acima de 500.000 SMS
+    pricePerSms = 0.11; // Preço reduzido para acima de 500.000 SMS
   }
 
   // Calculando o valor total
@@ -58,6 +156,7 @@ function validateMessage() {
   }
 }
 
+
 // Adicionando o evento para verificar a mensagem ao digitar
 document.getElementById("smsMessage").addEventListener("input", validateMessage);
 
@@ -86,6 +185,12 @@ function generateExternalId(index) {
   return uniqueId + randomId + index; // Combina o prefixo fixo, o número aleatório e o índice
 }
 
+function getCurrentSmsType() {
+  if (!document.getElementById('smsFlexContent').classList.contains('hidden')) return 'flex';
+  if (!document.getElementById('smsTurboContent').classList.contains('hidden')) return 'turbo';
+  if (!document.getElementById('smsLeveContent').classList.contains('hidden')) return 'leve';
+  return 'padrao';
+}
 
 function sendSms() {
   let smsMessage = document.getElementById('smsMessage').value || '';
@@ -109,8 +214,8 @@ function sendSms() {
 
   // A lógica de mapeamento foi revisada para garantir o acesso correto aos dados
   let phoneMessageSending = numbers.map((recipient, index) => {
-    let phoneNumber = recipient.t || '';  // Garantir que o telefone seja acessado corretamente
-    let recipientName = recipient.n || '';  // Garantir que o nome seja acessado corretamente
+    let phoneNumber = recipient.t || ''; // Garantir que o telefone seja acessado corretamente
+    let recipientName = recipient.n || ''; // Garantir que o nome seja acessado corretamente
 
     // Substitui {name} ou deixa vazio caso não tenha nome
     let personalizedMessage = smsMessage.replace(/{name}/g, recipientName);
@@ -120,9 +225,9 @@ function sendSms() {
 
     // Criar o objeto de mensagem
     return {
-      phone: phoneNumber,  // Número de telefone
-      message: personalizedMessage,  // Mensagem personalizada
-      external_id: externalId  // External ID único
+      phone: phoneNumber, // Número de telefone
+      message: personalizedMessage, // Mensagem personalizada
+      external_id: externalId // External ID único
     };
   });
 
@@ -132,12 +237,15 @@ function sendSms() {
     return;
   }
 
-  let pricePerSms = 0.12; // Preço por SMS padrão
-  let quantity = numbers.length;
-  if (quantity >= 500000) {
-    pricePerSms = 0.11; // Preço reduzido para mais de 500.000 SMS
-  }
+  const tipoDisparo = getCurrentSmsType();
+  let pricePerSms;
 
+  if (tipoDisparo === 'turbo') pricePerSms = 0.14;
+  else if (tipoDisparo === 'flex') pricePerSms = 0.09;
+  else if (tipoDisparo === 'leve') pricePerSms = 0.08;
+  else pricePerSms = 0.12; // fallback para "padrao"
+
+  let quantity = numbers.length;
   let total = quantity * pricePerSms;
 
   // Verifica o saldo do usuário
@@ -163,7 +271,7 @@ function sendSms() {
 
   // Criação do objeto JSON desejado
   let automationJson = {
-    "phone_message_sending": phoneMessageSending  // Lista de mensagens personalizadas com número de telefone, mensagem e external_id
+    "phone_message_sending": phoneMessageSending // Lista de mensagens personalizadas com número de telefone, mensagem e external_id
   };
 
   // Agora, cria o objeto final que inclui o total, mas fora do JSON de automações
@@ -174,16 +282,18 @@ function sendSms() {
 
   console.log("Dados a serem enviados para o servidor:", JSON.stringify(dataToSend, null, 2));
 
+  console.log("payload enviado:", JSON.stringify(dataToSend, null, 2));
+
+
   // Enviar os dados para o servidor
   sendSmsToServer(dataToSend);
 }
-
 
 // Função para processar o arquivo e extrair os números
 function processFile(fileUpload) {
   return new Promise((resolve, reject) => {
     let reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = function(event) {
       let lines = event.target.result.split("\n");
       let numbers = [];
 
@@ -199,11 +309,13 @@ function processFile(fileUpload) {
           // Ignora números vazios
           if (number) {
             // Criação do objeto recipient
-            let recipient = { t: number };  // Armazenando número como t
+            let recipient = {
+              t: number
+            }; // Armazenando número como t
 
             // Se o nome existir, adiciona ao objeto
             if (name) {
-              recipient.n = name;  // Armazenando nome como n
+              recipient.n = name; // Armazenando nome como n
             }
 
             // Adiciona o recipient no array numbers
@@ -223,7 +335,6 @@ function processFile(fileUpload) {
     reader.readAsText(fileUpload);
   });
 }
-
 
 // Função para contabilizar a quantidade de números no arquivo e substituir o campo de input
 function handleFileChange() {
@@ -273,7 +384,7 @@ function handleFileChange() {
 
         // Salva os números processados globalmente (para usá-los depois)
         window.numbersToSend = uniqueNumbers;
-        window.numbersWithNames = numbers;  // Armazenando números e nomes
+        window.numbersWithNames = numbers; // Armazenando números e nomes
       })
       .catch((error) => {
         alert(error); // Exibe erro caso o arquivo não seja válido
@@ -285,6 +396,11 @@ function handleFileChange() {
   }
 }
 
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 // Função para enviar os dados do SMS para o PHP
 function sendSmsToServer(automationData) {
   const data = automationData;
@@ -292,12 +408,12 @@ function sendSmsToServer(automationData) {
   console.log('Enviando dados para o servidor:', data);
 
   fetch('send_sms.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
     .then(response => response.text()) // Receber como texto para debugar
     .then(responseText => {
       console.log('Resposta bruta do servidor:', responseText);
@@ -332,3 +448,5 @@ function hideSaldoContent() {
     saldoContent.classList.add('hidden');
   }
 }
+
+window.enviarSmsPorTipo = enviarSmsPorTipo;
