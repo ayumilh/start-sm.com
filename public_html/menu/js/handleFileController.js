@@ -62,9 +62,6 @@ function handleFileByType(tipo, precoPorSms) {
             window.numbersToSend = uniqueNumbers;
             window.numbersWithNames = numbers;
 
-            console.log("numbersWithNames carregado:", window.numbersWithNames);
-
-
             validarEnvioModal(tipo);
         })
         .catch(error => alert("Erro ao processar o arquivo: " + error));

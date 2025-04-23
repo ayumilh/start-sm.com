@@ -92,69 +92,85 @@ if (isset($_GET['logout'])) {
       <hr class="w-full border border-gray-400 mb-4">
 
       <nav class="flex-1 px-2">
-        <ul class="space-y-2 p-4">
+        <ul class="space-y-2 p-4 text-sm font-medium text-gray-800">
+
           <!-- Envio de SMS em Massa -->
-          <li class="relative group" id="smsMenuItem">
-            <button onclick="toggleSubmenu('submenuSmsDesktop')"
-              class="flex items-center w-full p-2 text-left hover:text-blue-700 rounded text-gray-800">
-              <i class="fas fa-sms mr-3"></i>
-              <span class="font-bold">Envio de SMS em Massa</span>
-              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform"
-                id="iconSmsDesktop"></i>
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="smsMenuItem">
+            <button onclick="toggleSubmenu('submenuSmsDesktop')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-sms mr-3 text-gray-600"></i>
+              <span class="font-semibold text-gray-800">Envio de SMS em Massa</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconSmsDesktop"></i>
             </button>
 
-            <ul id="submenuSmsDesktop" class="hidden flex-col space-y-1 pl-10 mt-2 text-sm">
+            <ul id="submenuSmsDesktop" class="hidden flex-col space-y-1 pl-6 mt-2">
               <li>
                 <button id="smsLeveLink" onclick="showContent('smsLeveContent', 'smsLeveLink')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Leve</button>
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Disparo Leve
+                </button>
               </li>
               <li>
                 <button id="smsTurboLink" onclick="showContent('smsTurboContent', 'smsTurboLink')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Turbo</button>
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Disparo Turbo
+                </button>
               </li>
               <li>
                 <button id="smsFlexLink" onclick="showContent('smsFlexContent', 'smsFlexLink')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Flex</button>
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Disparo Flex
+                </button>
               </li>
             </ul>
-
           </li>
 
           <!-- Disparo WhatsApp -->
-          <li id="menuItemId">
-            <button onclick="showSmsForm('smsFormContainer', 'menuItemId')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
-              <i class="fab fa-whatsapp mr-3"></i>
-              <span class="font-bold">Disparo WhatsApp</span>
+          <li id="menuItemWhatsapp" class="transition-all duration-200 ease-in-out rounded-lg group">
+            <button onclick="showSmsForm('smsFormContainer', 'menuItemWhatsapp')"
+              class="flex items-center w-full px-3 py-2 rounded-lg hover:bg-blue-50 transition">
+              <i class="fab fa-whatsapp mr-3 text-green-600 group-hover:text-green-700 transition duration-200"></i>
+              <span class="font-semibold text-gray-800 group-hover:text-green-700 transition duration-200">Disparo WhatsApp</span>
             </button>
           </li>
+
 
           <!-- Adicionar Saldo -->
-          <li id="saldoMenuItem">
+          <li id="saldoMenuItem" class="transition-all duration-200 ease-in-out rounded-lg">
             <button onclick="showContent('saldoContent', 'saldoMenuItem')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
-              <i class="fas fa-wallet mr-3"></i>
-              <span class="font-bold">Adicionar Saldo</span>
+              class="flex items-center w-full px-3 py-2 rounded-lg hover:bg-blue-50 transition">
+              <i class="fas fa-wallet mr-3 text-gray-700"></i>
+              <span class="font-semibold text-gray-800">Adicionar Saldo</span>
             </button>
           </li>
 
-          <li id="geradorTelefoneMenuItem">
-            <button onclick="showContent('geradorContent', 'geradorTelefoneMenuItem')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
-              <i class="fas fa-phone mr-3"></i>
-              <span class="font-bold">Gerador de Telefone</span>
+          <!-- Ferramentas -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="toolsMenuItem">
+            <button onclick="toggleSubmenu('submenuFerramentas')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-tools mr-3 text-gray-600"></i>
+              <span class="font-semibold text-gray-800">Ferramentas</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconFerramentas"></i>
             </button>
+
+            <ul id="submenuFerramentas" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button id="geradorTelefoneMenuItem" onclick="showContent('geradorContent', 'geradorTelefoneMenuItem')"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Gerador de Telefone
+                </button>
+              </li>
+            </ul>
           </li>
 
-          <!-- Outros Itens Bloqueados -->
+          <!-- Inativo -->
           <li class="opacity-50 cursor-not-allowed">
-            <div class="flex items-center w-full p-2 text-gray-800 hover:text-blue-700">
-              <i class="fas fa-mobile-alt mr-3"></i>
-              <span class="font-bold">Consultar Operadora</span>
+            <div class="flex items-center w-full px-3 py-2">
+              <i class="fas fa-mobile-alt mr-3 text-gray-500"></i>
+              <span class="font-semibold text-gray-500">Consultar Operadora</span>
             </div>
           </li>
         </ul>
       </nav>
+
     </aside>
 
     <!-- MOBILE e TABLET: menu hamburger -->
@@ -360,51 +376,6 @@ if (isset($_GET['logout'])) {
         </div>
       </header>
 
-      <!-- Conteúdo de Envio de SMS -->
-      <div id="smsContent"
-        class="modal mt-40 md:mt-46 lg:mt-0 content-section bg-white p-6 rounded-lg shadow-lg w-full lg:max-w-2xl xl:max-w-3xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-xl text-gray-800 font-semibold">Envio de SMS</h2>
-          <button onclick="hideContent('smsContent')" class="text-xl text-gray-500"></button>
-        </div>
-        <div class="flex flex-col gap-4 items-start">
-          <p class="text-gray-800 font-semibold">Digite a mensagem a ser enviada:</p>
-          <textarea id="smsMessage" rows="4" maxlength="200" placeholder="Digite sua mensagem"
-            class="w-full p-3 border border-gray-300 rounded-md text-base text-gray-800 font-normal"></textarea>
-
-          <p class="text-gray-800 font-semibold">Carregar lista de números (.txt):</p>
-          <input type="file" id="fileUpload" accept=".txt" onchange="handleFileChange()"
-            class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold">
-
-          <p id="fileStatus" class="text-gray-800 font-semibold">Nenhum arquivo carregado</p>
-          <p id="smsQuantityText" class="text-gray-800"></p>
-
-          <p class="total text-yellow-600 font-semibold">
-            Valor do envio: <span class="">-</span> R$
-            <span id="smsTotal">0,00</span>
-          </p>
-
-          <p class="text-gray-800 font-semibold text-xl">Saldo restante: <span id="discountedBalance">R$ 0,00</span></p>
-
-          <hr class="border border-gray-200 w-full">
-
-          <div class="w-full flex flex-col md:flex-row gap-4 px-1 md:-px-4 justify-between items-start lg:items-center">
-            <div class="w-full flex items-center gap-2">
-              <p class="w-full text-blue-500 font-semibold text-2xl whitespace-nowrap">Saldo atual: <span
-                  id="userBalance" class="text-lg text-gray-900">R$
-                  <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?>
-                </span></p>
-            </div>
-
-            <div class="flex w-full justify-end gap-3">
-              <button id="sendSmsButton"
-                class="w-full confirmaCompra px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:shadow-sm"
-                onclick="sendSms()" disabled>Enviar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Formulário de Campanha de SMS -->
       <div id="smsFormContainer" class="content-section">
         <div class="bg-white mt-40 md:mt-46 lg:mt-0 p-6 rounded-lg shadow-lg lg:max-w-2xl xl:max-w-3xl w-full mx-auto">
@@ -412,15 +383,15 @@ if (isset($_GET['logout'])) {
             de
             SMS</h4>
           <form id="smsForm" method="POST" class="w-full flex flex-col gap-5">
-
-            <!-- Números de Telefone -->
             <div class="form-group w-full flex flex-col items-start gap-2">
-              <label for="numeros" class="text-lg font-medium text-gray-700">Números de Telefone (um por linha)</label>
-              <textarea
-                class="p-4 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                id="numeros" rows="3" placeholder="Exemplo de Formatação Correta: 5511988888888"></textarea>
-              <small id="numero-contador" class="text-sm text-gray-500">0 / 30.000 números</small>
+              <label for="fileUpload" class="text-lg font-medium text-gray-700">
+                Carregar lista de números (.txt)
+              </label>
+              <input type="file" id="fileUpload" accept=".txt"
+                class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold">
+              <small id="numero-contador" class="text-sm text-gray-500">0 números carregados</small>
             </div>
+
 
             <!-- Escolher Mensagem -->
             <div class="form-group w-full flex flex-col items-start gap-2">
@@ -493,6 +464,53 @@ if (isset($_GET['logout'])) {
           </div>
         </div>
       </div>
+
+      <!-- Modal de Confirmação -->
+      <div id="modalConfirmacao" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-xl w-full max-w-2xl shadow-2xl text-gray-800">
+          <h2 class="text-2xl font-bold mb-6 border-b pb-3">Confirmar Envio da Campanha</h2>
+
+          <div class="space-y-5 text-base leading-relaxed">
+            <div>
+              <p class="font-semibold text-gray-700 text-lg">Mensagem Escolhida:</p>
+              <p class="text-gray-900 text-lg italic" id="modal-msg-escolhida"></p>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700 text-lg">Link Original:</p>
+              <p class="text-gray-900 text-lg" id="modal-link"></p>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700 text-lg">Encurtador:</p>
+              <p class="text-gray-900 text-lg" id="modal-encurtador"></p>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700 text-lg">Mensagem Final:</p>
+              <p class="text-gray-900 text-lg italic" id="modal-msg-gerada"></p>
+            </div>
+
+            <div class="flex justify-between items-center pt-5 border-t">
+              <p class="font-semibold text-gray-800 text-lg">Quantidade de Números: <span class="font-bold" id="modal-qtd"></span></p>
+              <p class="font-semibold text-gray-800 text-lg">Valor Total: R$ <span class="font-bold" id="modal-total"></span></p>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-4 mt-8">
+            <button onclick="document.getElementById('modalConfirmacao').classList.add('hidden')"
+              class="px-5 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-700 text-lg font-medium">
+              Cancelar
+            </button>
+            <button id="btnConfirmarEnvio"
+              class="px-6 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold shadow-md">
+              Confirmar Envio
+            </button>
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- Conteúdo de Adicionar Saldo -->
       <div id="saldoContent"
@@ -939,7 +957,6 @@ if (isset($_GET['logout'])) {
 
 
     function enviarSmsPorTipo(tipoDisparo) {
-      console.log("Tipo de disparo:", tipoDisparo); // Debug: Verifica o tipo de disparo atual
       let textareaId = '';
       if (tipoDisparo === 'flex') textareaId = 'smsFlexMessage';
       else if (tipoDisparo === 'turbo') textareaId = 'smsTurboMessage';
@@ -1352,10 +1369,12 @@ if (isset($_GET['logout'])) {
     window.enviarSmsPorTipo = enviarSmsPorTipo;
   </script>
 
+
   <!-- <script src="js/sendSms.js"></script> -->
 
   <script src="js/geradorTelefone.js"></script>
 
+  <script src="js/enviarCampanha.js"></script>
 
   <script src="js/displayController.js"></script>
 

@@ -1,15 +1,65 @@
+function hideAllContents() {
+    document.querySelectorAll('.content-section').forEach(content => content.style.display = 'none');
+}
+
+function resetAllMenuHighlights() {
+    document.querySelectorAll('li').forEach(item => {
+        item.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-600');
+        const button = item.querySelector('button');
+        const span = item.querySelector('span');
+        const icon = item.querySelector('i');
+
+        if (button) button.classList.remove('text-blue-700', 'font-bold');
+        if (span) span.classList.remove('text-blue-700', 'font-bold');
+        if (icon) icon.classList.remove('text-blue-700');
+    });
+}
+
+function highlightMenuItem(menuItemId) {
+    const activeButton = document.getElementById(menuItemId);
+    if (!activeButton) return;
+
+    const li = activeButton.closest('li');
+    if (li) li.classList.add('bg-blue-100', 'border-l-4', 'border-blue-600');
+
+    activeButton.classList.add('text-blue-700', 'font-bold');
+    const span = activeButton.querySelector('span');
+    const icon = activeButton.querySelector('i');
+    if (span) span.classList.add('text-blue-700', 'font-bold');
+    if (icon) icon.classList.add('text-blue-700');
+}
+
 function showContent(contentId, menuItemId) {
+    hideAllContents();
+
+    const content = document.getElementById(contentId);
+    if (content) content.style.display = 'block';
+
+    resetAllMenuHighlights();
+    highlightMenuItem(menuItemId);
+
+    closeMenu();
+}
+
+function showSmsForm(contentId, menuItemId) {
     // Esconde todos os conteúdos
     const contents = document.querySelectorAll('.content-section');
-    contents.forEach(content => content.style.display = 'none');
+    contents.forEach(content => {
+        content.style.display = 'none';
+    });
 
-    // Mostra o conteúdo desejado
-    const content = document.getElementById(contentId);
-    if (content) {
-        content.style.display = 'block';
-    }
+    // Fecha o submenu de SMS
+    const submenuSms = document.getElementById('submenuSmsDesktop');
+    if (submenuSms) submenuSms.classList.add('hidden');
 
-    // Remove destaque de todos os botões
+    // Remove ícone rotacionado (seta)
+    const smsIcon = document.getElementById('iconSmsDesktop');
+    if (smsIcon) smsIcon.classList.remove('rotate-180');
+
+    // Remove destaque de todos os menus e submenus
+    const allLis = document.querySelectorAll('nav ul li');
+    allLis.forEach(li => li.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-700'));
+
     const allButtons = document.querySelectorAll('li button');
     allButtons.forEach(button => {
         button.classList.remove('text-blue-700', 'font-bold');
@@ -19,52 +69,32 @@ function showContent(contentId, menuItemId) {
         if (icon) icon.classList.remove('text-blue-700');
     });
 
-    // Remove destaque de todos os <li> pais
-    const allLis = document.querySelectorAll('nav ul li');
-    allLis.forEach(li => li.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-700'));
+    // Exibe o WhatsApp
+    const smsFormContainer = document.getElementById(contentId);
+    if (smsFormContainer) smsFormContainer.style.display = 'block';
 
-    // Adiciona destaque ao botão clicado
-    const activeButton = document.getElementById(menuItemId);
-    if (activeButton) {
-        activeButton.classList.add('text-blue-700', 'font-bold');
-        const span = activeButton.querySelector('span');
-        const icon = activeButton.querySelector('i');
+    // Aplica destaque apenas ao item do WhatsApp
+    const activeItem = document.getElementById(menuItemId);
+    if (activeItem) {
+        activeItem.classList.add('text-blue-700', 'font-bold');
+        const span = activeItem.querySelector('span');
+        const icon = activeItem.querySelector('i');
         if (span) span.classList.add('text-blue-700', 'font-bold');
         if (icon) icon.classList.add('text-blue-700');
 
-        // Destaca o <li> pai (item clicado ou submenu pai)
-        const liPai = activeButton.closest('li');
+        const liPai = activeItem.closest('li');
         if (liPai) liPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
-
-        // Se for submenu, destaca o <li> do menu principal também
-        const liMenuPai = activeButton.closest('ul')?.closest('li');
-        if (liMenuPai) liMenuPai.classList.add('bg-blue-100', 'border-l-4', 'border-blue-700');
     }
 
-    // Fecha menu mobile se estiver aberto
-    closeMenu?.();
+    closeMenu();
 }
 
 
-
-function showSaldoModal() {
-    document.getElementById('saldoModal').classList.remove('hidden');
-}
-
-// Função para fechar o modal
-function closeSaldoModal() {
-    document.getElementById('saldoModal').classList.add('hidden');
-}
-
-// Função para esconder o conteúdo
 function hideContent(contentId) {
     const content = document.getElementById(contentId);
-    if (content) {
-        content.style.display = 'none'; // Esconde o conteúdo desejado
-    }
+    if (content) content.style.display = 'none';
 }
 
-// Função para garantir que apenas um conteúdo esteja aberto por vez
 function closeOtherMenus(currentContentId) {
     const contentIds = [
         'smsContent',
@@ -74,85 +104,35 @@ function closeOtherMenus(currentContentId) {
         'smsFlexContent',
         'smsTurboContent',
         'smsLeveContent'
-    ]; contentIds.forEach(contentId => {
-        if (contentId !== currentContentId) {
-            hideContent(contentId);
-        }
+    ];
+    contentIds.forEach(id => {
+        if (id !== currentContentId) hideContent(id);
     });
 }
 
-// Inicializa com os dois conteúdos ocultos
-document.addEventListener('DOMContentLoaded', function () {
-    hideContent('smsContent');
-    hideContent('saldoContent');
-    hideContent('smsFormContainer');
-    hideContent('geradorContent');
-    hideContent('smsFlexContent');
-    hideContent('smsTurboContent');
-    hideContent('smsLeveContent');
-});
-
-function showSmsForm(contentId, menuItemId) {
-    // Esconde todos os conteúdos
-    const contents = document.querySelectorAll('.content-section');
-    contents.forEach(function (content) {
-        content.style.display = 'none'; // Esconde todos os conteúdos
-    });
-
-    // Exibe o conteúdo específico
-    const smsFormContainer = document.getElementById('smsFormContainer');
-    if (smsFormContainer) {
-        smsFormContainer.style.display = 'block'; // Exibe o conteúdo desejado
-    }
-
-    // Remove a classe ativa (texto azul) de todos os itens de menu
-    const menuItems = document.querySelectorAll('li');
-    menuItems.forEach(function (item) {
-        item.classList.remove('text-blue-700', 'font-bold'); // Remove a classe de ativo de todos os itens
-        const span = item.querySelector('span');
-        const icon = item.querySelector('i');
-        if (span) {
-            span.classList.remove('text-blue-700'); // Remove o azul do texto
-        }
-        if (icon) {
-            icon.classList.remove('text-blue-700'); // Remove o azul do ícone
-        }
-    });
-
-    // Adiciona a classe de ativo ao item que foi clicado
-    const activeItem = document.getElementById(menuItemId);
-    if (activeItem) {
-        activeItem.classList.add('text-blue-700', 'font-bold'); // Destaca o item do menu
-        const span = activeItem.querySelector('span');
-        const icon = activeItem.querySelector('i');
-        if (span) {
-            span.classList.add('text-blue-700'); // Adiciona o texto azul no <span>
-        }
-        if (icon) {
-            icon.classList.add('text-blue-700'); // Adiciona o azul no ícone
-        }
-    }
-
-    closeMenu();
-}
-
-// Função para mostrar o modal de histórico de saldo
 function showSaldoModal() {
-    // Exibe o modal
-    $('#saldoModal').modal('show');
+    document.getElementById('saldoModal')?.classList.remove('hidden');
+}
+
+function closeSaldoModal() {
+    document.getElementById('saldoModal')?.classList.add('hidden');
 }
 
 function closeTransactionModal() {
-    document.getElementById('transactionModal').style.display = "none";
+    document.getElementById('transactionModal')?.style.setProperty('display', 'none');
 }
 
-
-// Função para fechar o menu lateral
 function closeMenu() {
     const mobileMenu = document.getElementById('mobileMenu');
     if (mobileMenu) {
-        mobileMenu.classList.add('translate-x-full'); // Fecha o menu
-        mobileMenu.classList.remove('translate-x-0'); // Remove a classe para exibir o menu
-        mobileMenu.classList.add('hidden'); // Esconde o menu
+        mobileMenu.classList.add('translate-x-full', 'hidden');
+        mobileMenu.classList.remove('translate-x-0');
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Oculta todas as seções no início
+    hideAllContents();
+});
+
+

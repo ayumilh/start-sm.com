@@ -6,9 +6,11 @@ session_start();
 $id_usuario = $_SESSION['usuario_id'];
 
 // Consulta para selecionar as campanhas criadas pelo usuário logado
-$sql = "SELECT id, status, data_criacao, numero_campanha, total_enviados, total_sucesso, total_falhas, enviado_para, saldo_total_gasto 
-        FROM campanhas 
-        WHERE id_usuario = :id_usuario";
+$sql = "SELECT id, mensagem_escolhida, link_original, encurtador_utilizado, mensagem_gerada, enviados, nao_enviados, criado_em 
+FROM envios_sms_campanha 
+WHERE usuario_id = :id_usuario 
+ORDER BY criado_em DESC";
+
 $stmt = $pdo->prepare($sql);
 $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 $stmt->execute();
@@ -24,7 +26,7 @@ $campanhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Minhas Campanhas</title>
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
@@ -145,27 +147,30 @@ $campanhas = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Status</th>
                             <th>Data de Criação</th>
-                            <th>Número da Campanha</th>
+                            <th>Mensagem Escolhida</th>
+                            <th>Link</th>
+                            <th>Encurtador</th>
                             <th>Total Enviados</th>
-                            <th>Saldo Total Gasto</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php foreach ($campanhas as $campanha): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($campanha['id']); ?></td>
-                                <td><?php echo htmlspecialchars($campanha['status']); ?></td>
-                                <td><?php echo date('d/m/Y H:i:s', strtotime($campanha['data_criacao'])); ?></td>
-                                <td><?php echo htmlspecialchars($campanha['numero_campanha']); ?></td>
-                                <td><?php echo htmlspecialchars($campanha['total_enviados']); ?></td>
-                                <td><?php echo 'R$ ' . number_format($campanha['saldo_total_gasto'], 2, ',', '.'); ?></td>
-                                <td class="actions">
-                                    <a href="visualizar_envios.php?numero_campanha=<?php echo htmlspecialchars($campanha['numero_campanha']); ?>" class="btn-view">Visualizar Envios</a>
+                                <td><?php echo date('d/m/Y H:i:s', strtotime($campanha['criado_em'])); ?></td>
+                                <td><?php echo htmlspecialchars($campanha['mensagem_escolhida']); ?></td>
+                                <td><?php echo $campanha['link_original'] ? htmlspecialchars($campanha['link_original']) : '—'; ?></td>
+                                <td><?php echo $campanha['encurtador_utilizado'] ? htmlspecialchars($campanha['encurtador_utilizado']) : '—'; ?></td>
+                                <td>
+                                    <?php
+                                    $enviados = json_decode($campanha['enviados'] ?? '[]');
+                                    echo is_array($enviados) ? count($enviados) : 0;
+                                    ?>
                                 </td>
                             </tr>
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>

@@ -39,7 +39,6 @@ function capitalize(str) {
 
 
 function enviarSmsPorTipo(tipoDisparo) {
-  console.log("Tipo de disparo:", tipoDisparo); // Debug: Verifica o tipo de disparo atual
   let textareaId = '';
   if (tipoDisparo === 'flex') textareaId = 'smsFlexMessage';
   else if (tipoDisparo === 'turbo') textareaId = 'smsTurboMessage';
