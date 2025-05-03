@@ -133,14 +133,23 @@ if (isset($_GET['logout'])) {
             </button>
           </li>
 
-
-          <!-- Adicionar Saldo -->
-          <li id="saldoMenuItem" class="transition-all duration-200 ease-in-out rounded-lg">
-            <button onclick="showContent('saldoContent', 'saldoMenuItem')"
-              class="flex items-center w-full px-3 py-2 rounded-lg hover:bg-blue-50 transition">
-              <i class="fas fa-wallet mr-3 text-gray-700"></i>
-              <span class="font-semibold text-gray-800">Adicionar Saldo</span>
+          <!-- SMS com Ligação -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="smsLigacaoMenuItem">
+            <button onclick="toggleSubmenu('submenuSmsLigacao')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-phone-volume mr-3 text-gray-600"></i>
+              <span class="font-semibold text-gray-800">SMS com Ligação</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconSmsLigacao"></i>
             </button>
+
+            <ul id="submenuSmsLigacao" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button id="smsVozLink" onclick="showContent('vozModal', 'smsVozLink')"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • SMS com Voz
+                </button>
+
+              </li>
+            </ul>
           </li>
 
           <!-- Ferramentas -->
@@ -155,22 +164,140 @@ if (isset($_GET['logout'])) {
               <li>
                 <button id="geradorTelefoneMenuItem" onclick="showContent('geradorContent', 'geradorTelefoneMenuItem')"
                   class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
-                  • Gerador de Telefone
+                  • Gerador de Números
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button onclick="showContent('limpezaListaContent', 'limpezaListaLink')"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Limpeza de Lista
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button onclick="showContent('consultaOperadoraContent', 'consultaOperadoraLink')"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Consultar de Operadora
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button onclick="showContent('painelColheitaLeadContent', 'painelColheitaLeadLink')"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Painel de Colheita de Lead
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <a href="https://start-sms.com/dashboard/campanhas.php" target="_blank"
+                  class="block px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 hover:text-blue-800 font-normal transition">
+                  • Verificar Status
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Ativos Facebook -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="ativosFacebookMenuItem">
+            <button onclick="toggleSubmenu('submenuAtivosFacebook', 'iconAtivosFacebook')" class="flex items-center w-full px-3 py-2 text-left rounded-lg text-gray-700 focus:outline-none">
+              <i class="fab fa-facebook mr-3"></i>
+              <span class="font-semibold">Ativos Facebook</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconAtivosFacebook"></i>
+            </button>
+
+            <ul id="submenuAtivosFacebook" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button disabled class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed">• Bms</button>
+              </li>
+              <li>
+                <button disabled class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed">• Perfis</button>
+              </li>
+              <li>
+                <button disabled class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed">• Proxy</button>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Financeiro -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="financeiroMenuItem">
+            <button onclick="toggleSubmenu('submenuFinanceiro')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-coins mr-3 text-neutral-600"></i>
+              <span class="font-semibold text-gray-800">Financeiro</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconFinanceiro"></i>
+            </button>
+            <ul id="submenuFinanceiro" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button onclick="showContent('saldoContent', 'saldoMenuItem')" id="saldoMenuItem"
+                  class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Adicionar Saldo
+                </button>
+              </li>
+
+              <li>
+                <button onclick="showSaldoModal()" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Histórico de Saldo
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Faturas e Pagamentos
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Cupons e Créditos Promocionais
                 </button>
               </li>
             </ul>
           </li>
 
-          <!-- Inativo -->
-          <li class="opacity-50 cursor-not-allowed">
-            <div class="flex items-center w-full px-3 py-2">
-              <i class="fas fa-mobile-alt mr-3 text-gray-500"></i>
-              <span class="font-semibold text-gray-500">Consultar Operadora</span>
-            </div>
+          <!-- Suporte -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="suporteMenuItem">
+            <button onclick="toggleSubmenu('submenuSuporte')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-headset mr-3 text-neutral-600"></i>
+              <span class="font-semibold text-gray-800">Suporte</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconSuporte"></i>
+            </button>
+            <ul id="submenuSuporte" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Falar com Suporte (WhatsApp)
+                </button>
+              </li>
+            </ul>
           </li>
+
+          <!-- Conta e Segurança -->
+          <li class="transition-all duration-200 ease-in-out rounded-lg" id="contaMenuItem">
+            <button onclick="toggleSubmenu('submenuConta')" class="flex items-center w-full px-3 py-2 text-left rounded-lg hover:bg-blue-50 focus:outline-none">
+              <i class="fas fa-user-shield mr-3 text-neutral-600"></i>
+              <span class="font-semibold text-gray-800">Conta e Segurança</span>
+              <i class="fas fa-chevron-down ml-auto text-gray-500 transition-transform duration-300 transform" id="iconConta"></i>
+            </button>
+            <ul id="submenuConta" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Minha Conta
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Segurança / 2FA
+                </button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed">
+                <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Trocar Senha
+                </button>
+              </li>
+              <li>
+                <a href="?logout=true"
+                  class="block w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Sair
+                </a>
+              </li>
+            </ul>
+          </li>
+
         </ul>
       </nav>
-
     </aside>
 
     <!-- MOBILE e TABLET: menu hamburger -->
@@ -255,64 +382,124 @@ if (isset($_GET['logout'])) {
       </div>
 
       <nav class="flex-1 px-2">
-        <ul class="space-y-2 p-4">
+        <ul class="space-y-2 p-4 text-sm font-medium text-gray-800">
           <!-- Envio de SMS em Massa -->
           <li class="relative group" id="smsMenuItemMobile">
-            <button onclick="toggleSubmenu('submenuSmsMobile')"
-              class="flex items-center w-full p-2 text-left hover:text-blue-700 rounded text-gray-800">
+            <button onclick="toggleSubmenu('submenuSmsMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
               <i class="fas fa-sms mr-3"></i>
               <span class="font-bold">Envio de SMS em Massa</span>
               <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconSmsMobile"></i>
             </button>
-
-            <ul id="submenuSmsMobile" class="hidden flex-col space-y-1 pl-10 mt-2 text-sm">
-              <li>
-                <button id="smsLeveLinkMobile" onclick="showContent('smsLeveContent', 'smsLeveLinkMobile')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Leve</button>
-              </li>
-              <li>
-                <button id="smsTurboLinkMobile" onclick="showContent('smsTurboContent', 'smsTurboLinkMobile')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Turbo</button>
-              </li>
-              <li>
-                <button id="smsFlexLinkMobile" onclick="showContent('smsFlexContent', 'smsFlexLinkMobile')"
-                  class="block text-gray-800 font-semibold hover:text-blue-600 text-base">Disparo Flex</button>
-              </li>
+            <ul id="submenuSmsMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li><button onclick="showContent('smsLeveContent', 'smsLeveLinkMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• Disparo Leve</button></li>
+              <li><button onclick="showContent('smsTurboContent', 'smsTurboLinkMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• Disparo Turbo</button></li>
+              <li><button onclick="showContent('smsFlexContent', 'smsFlexLinkMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• Disparo Flex</button></li>
             </ul>
           </li>
 
           <!-- Disparo WhatsApp -->
-          <li id="menuItemId">
-            <button onclick="showSmsForm('smsFormContainer', 'menuItemId')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
+          <li id="menuItemWhatsappMobile">
+            <button onclick="showSmsForm('smsFormContainer', 'menuItemWhatsappMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
               <i class="fab fa-whatsapp mr-3"></i>
               <span class="font-bold">Disparo WhatsApp</span>
             </button>
           </li>
 
-          <!-- Adicionar Saldo -->
-          <li id="saldoMenuItem">
-            <button onclick="showContent('saldoContent', 'saldoMenuItem')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
-              <i class="fas fa-wallet mr-3"></i>
-              <span class="font-bold">Adicionar Saldo</span>
+          <!-- SMS com Ligação -->
+          <li class="relative group" id="smsLigacaoMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuSmsLigacaoMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
+              <i class="fas fa-phone-volume mr-3"></i>
+              <span class="font-bold">SMS com Ligação</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconSmsLigacaoMobile"></i>
             </button>
+            <ul id="submenuSmsLigacaoMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li><button onclick="showContent('smsVozContent', 'smsVozLinkMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• SMS com Voz</button></li>
+            </ul>
           </li>
 
-          <li id="geradorTelefoneMenuItem">
-            <button onclick="showContent('geradorContent', 'geradorTelefoneMenuItem')"
-              class="flex items-center w-full p-2 text-left text-gray-800 hover:text-blue-700 rounded">
-              <i class="fas fa-phone mr-3"></i>
-              <span class="font-bold">Gerador de Telefone</span>
+          <!-- Ferramentas -->
+          <li class="relative group" id="toolsMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuFerramentasMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
+              <i class="fas fa-tools mr-3"></i>
+              <span class="font-bold">Ferramentas</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconFerramentasMobile"></i>
             </button>
+            <ul id="submenuFerramentasMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button onclick="showContent('geradorContent', 'geradorTelefoneMenuItemMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• Gerador de Números</button>
+              </li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Limpeza de Lista</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Consultar Operadora</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Painel de Colheita de Lead</button></li>
+              <li class="opacity-50 cursor-not-allowed"><a href="https://start-sms.com/dashboard/campanhas.php" target="_blank" class="block px-3 py-2 rounded-lg text-gray-500">• Verificar Status</a></li>
+            </ul>
           </li>
 
-          <!-- Outros Itens Bloqueados -->
-          <li class="opacity-50 cursor-not-allowed">
-            <div class="flex items-center w-full p-2 text-gray-800 hover:text-blue-700">
-              <i class="fas fa-mobile-alt mr-3"></i>
-              <span class="font-bold">Consultar Operadora</span>
-            </div>
+          <li class="relative group opacity-50" id="ativosFacebookMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuAtivosFacebookMobile', 'iconAtivosFacebookMobile')" class="flex items-center w-full px-3 py-2 text-left rounded text-gray-500">
+              <i class="fab fa-facebook mr-3"></i>
+              <span class="font-bold">Ativos Facebook</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconAtivosFacebookMobile"></i>
+            </button>
+            <ul id="submenuAtivosFacebookMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li>
+                <button class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed" disabled>• Bms</button>
+              </li>
+              <li>
+                <button class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed" disabled>• Perfis</button>
+              </li>
+              <li>
+                <button class="w-full text-left px-3 py-2 rounded-lg text-gray-500 cursor-not-allowed" disabled>• Proxy</button>
+              </li>
+            </ul>
+          </li>
+
+
+          <!-- Financeiro -->
+          <li class="relative group" id="financeiroMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuFinanceiroMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
+              <i class="fas fa-coins mr-3"></i>
+              <span class="font-bold">Financeiro</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconFinanceiroMobile"></i>
+            </button>
+            <ul id="submenuFinanceiroMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li><button onclick="showContent('saldoContent', 'saldoMenuItemMobile')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">• Adicionar Saldo</button></li>
+              <li><button onclick="showSaldoModal()" class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Histórico de Saldo</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Faturas e Pagamentos</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Cupons e Créditos Promocionais</button></li>
+            </ul>
+          </li>
+
+          <!-- Suporte -->
+          <li class="relative group" id="suporteMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuSuporteMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
+              <i class="fas fa-headset mr-3"></i>
+              <span class="font-bold">Suporte</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconSuporteMobile"></i>
+            </button>
+            <ul id="submenuSuporteMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Falar com Suporte (WhatsApp)</button></li>
+            </ul>
+          </li>
+
+          <!-- Conta e Segurança -->
+          <li class="relative group" id="contaMenuItemMobile">
+            <button onclick="toggleSubmenu('submenuContaMobile')" class="flex items-center w-full px-3 py-2 text-left hover:text-blue-700 rounded text-gray-800">
+              <i class="fas fa-user-shield mr-3"></i>
+              <span class="font-bold">Conta e Segurança</span>
+              <i class="fas fa-chevron-down ml-auto transition-transform duration-300 transform" id="iconContaMobile"></i>
+            </button>
+            <ul id="submenuContaMobile" class="hidden flex-col space-y-1 pl-6 mt-2">
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Minha Conta</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Segurança / 2FA</button></li>
+              <li class="opacity-50 cursor-not-allowed"><button class="w-full text-left px-3 py-2 rounded-lg text-gray-500">• Trocar Senha</button></li>
+              <li>
+                <a href="?logout=true"
+                  class="block w-full text-left px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-normal transition">
+                  • Sair
+                </a>
+              </li>
+            </ul>
           </li>
         </ul>
       </nav>
@@ -509,7 +696,6 @@ if (isset($_GET['logout'])) {
           </div>
         </div>
       </div>
-
 
 
       <!-- Conteúdo de Adicionar Saldo -->
@@ -834,6 +1020,125 @@ if (isset($_GET['logout'])) {
 
             <div id="listaNumeros" class="hidden text-center mt-4 space-y-1 font-mono text-blue-700 text-lg"></div>
           </div>
+        </div>
+      </div>
+
+      <!-- Modal para Disparo de Chamada de Voz -->
+      <div id="vozModal" class="modal mt-40 md:mt-46 lg:mt-0 w-full content-section p-6 lg:max-w-2xl xl:max-w-3xl mx-auto hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-3xl p-8 overflow-y-auto max-h-[90vh]">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Enviar Chamada de Voz</h2>
+            <button onclick="document.getElementById('vozModal').classList.add('hidden')" class="text-gray-400 hover:text-gray-800 text-xl">&times;</button>
+          </div>
+
+          <form id="formChamadaVoz" class="space-y-4">
+
+            <!-- CAMPOS OBRIGATÓRIOS -->
+            <div>
+              <label class="block font-medium text-gray-700">Carregar lista de números (.txt) <span class="text-red-500">*</span></label>
+              <input type="file" id="vozFile" accept=".txt"
+                class="w-full p-3 border border-gray-300 rounded-md text-gray-800 font-semibold"
+                onchange="handleVozFile()">
+
+              <p id="vozFileStatus" class="text-gray-800 font-semibold">Nenhum arquivo carregado</p>
+              <p id="vozQuantityText" class="text-gray-800"></p>
+            </div>
+
+            <div>
+              <label class="block font-medium text-gray-700">Áudio da Chamada (.mp3) <span class="text-red-500">*</span></label>
+              <input type="file" id="vozAudioFile" accept=".mp3" required class="w-full border rounded-md p-3 text-gray-800 font-semibold">
+              <p id="vozAudioStatus" class="text-gray-600 mt-1">Nenhum arquivo selecionado</p>
+            </div>
+
+
+            <!-- BOTÃO PARA EXPANDIR OPÇÕES AVANÇADAS -->
+            <div>
+              <button type="button" onclick="document.getElementById('vozAvancado').classList.toggle('hidden')" class="text-blue-600 font-semibold flex items-center gap-2">
+                <i class="fas fa-chevron-down transition-transform transform" id="arrowIcon"></i> Configurações Avançadas
+              </button>
+            </div>
+
+            <!-- CAMPOS OPCIONAIS -->
+            <div id="vozAvancado" class="hidden mt-4 space-y-4">
+              <div>
+                <label class="block font-medium text-gray-700">Nome da Campanha</label>
+                <input type="text" id="vozCampaignName" class="w-full border rounded-md p-3">
+              </div>
+
+              <div>
+                <label class="block font-medium text-gray-700">Caller ID</label>
+                <input type="text" id="vozCallerId" placeholder="DDD + número" class="w-full border rounded-md p-3">
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-medium text-gray-700">Data de Início</label>
+                  <input type="datetime-local" id="vozStartDate" class="w-full border rounded-md p-3">
+                </div>
+
+                <div>
+                  <label class="block font-medium text-gray-700">DDD Automático</label>
+                  <select id="vozAutoDDD" class="w-full border rounded-md p-3">
+                    <option value="false">Não</option>
+                    <option value="true">Sim</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-medium text-gray-700">Horário Início Diário</label>
+                  <input type="time" id="vozDailyStartTime" class="w-full border rounded-md p-3">
+                </div>
+
+                <div>
+                  <label class="block font-medium text-gray-700">Horário Fim Diário</label>
+                  <input type="time" id="vozDailyEndTime" class="w-full border rounded-md p-3">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-medium text-gray-700">Tentativas (1-3)</label>
+                  <input type="number" id="vozMaxRetry" min="1" max="3" value="1" class="w-full border rounded-md p-3">
+                </div>
+
+                <div>
+                  <label class="block font-medium text-gray-700">Intervalo entre tentativas (ms)</label>
+                  <input type="number" id="vozIntervalRetry" min="1000" max="90000" value="3000" class="w-full border rounded-md p-3">
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-medium text-gray-700">Canais simultâneos</label>
+                <input type="number" id="vozChannels" class="w-full border rounded-md p-3">
+              </div>
+
+              <div>
+                <label class="block font-medium text-gray-700">ID externo</label>
+                <input type="text" id="vozExternalId" class="w-full border rounded-md p-3">
+              </div>
+            </div>
+
+            <!-- VALORES E ENVIO -->
+            <p class="total text-yellow-600 font-semibold">
+              Valor do envio: <span class="">-</span> R$ <span id="vozTotal">0,00</span>
+            </p>
+
+            <p class="text-gray-800 font-semibold text-xl">
+              Saldo restante: <span id="vozSaldoRestante">R$ 0,00</span>
+            </p>
+
+            <hr class="border border-gray-200 w-full my-4">
+
+            <div class="w-full flex flex-col md:flex-row gap-4 justify-between items-start lg:items-center">
+              <p class="w-full text-blue-500 font-semibold text-2xl whitespace-nowrap">
+                Saldo atual: <span id="userBalance" class="text-lg text-gray-900">R$ <?php echo number_format($usuario['saldo'], 2, ',', '.'); ?></span>
+              </p>
+
+              <button type="submit" id="btnEnviarVoz" class="w-full md:w-60 confirmaCompra px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 hover:shadow-sm">Enviar Campanha</button>
+            </div>
+          </form>
         </div>
       </div>
     </main>
@@ -1369,8 +1674,9 @@ if (isset($_GET['logout'])) {
     window.enviarSmsPorTipo = enviarSmsPorTipo;
   </script>
 
-
   <!-- <script src="js/sendSms.js"></script> -->
+
+  <script src="js/callController.js"></script>
 
   <script src="js/geradorTelefone.js"></script>
 
